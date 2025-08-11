@@ -6,12 +6,13 @@ import { Routes, Route } from "react-router-dom";
 
 import About from "./pages/About";
 import Home from "./pages/Home";
+import AppAppBar from "./components/AppAppBar";
 
 export default function App(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-
+      <AppAppBar />
       <Container
         maxWidth="lg"
         component="main"
