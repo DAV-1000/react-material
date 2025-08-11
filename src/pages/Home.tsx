@@ -16,14 +16,6 @@ export default function About() {
           Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
           consectetur, adipisci velit...
         </Typography>
-        <Link
-          component={RouterLink}
-          to="/about"
-          color="text.secondary"
-          variant="body2"
-        >
-          About us
-        </Link>
       </div>
     </Box>
   );

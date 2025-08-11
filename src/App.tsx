@@ -4,9 +4,22 @@ import AppTheme from "./shared-theme/AppTheme";
 
 import { Routes, Route } from "react-router-dom";
 
-import About from "./pages/About";
-import Home from "./pages/Home";
-import AppAppBar from "./components/AppAppBar";
+import AppAppBar from './components/AppAppBar';
+import Footer from './components/Footer';
+
+import Home from './pages/Home';
+import Features from './pages/Features';
+import Testimonials from './pages/Testimonials';
+import Highlights from './pages/Highlights';
+import Pricing from './pages/Pricing';
+import FAQ from './pages/FAQ';
+import Blog from './pages/Blog';
+import About from './pages/About';
+import Careers from './pages/Careers';
+import Press from './pages/Press';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Contact from './pages/Contact';
 
 export default function App(props: { disableCustomTheme?: boolean }) {
   return (
@@ -19,10 +32,22 @@ export default function App(props: { disableCustomTheme?: boolean }) {
         sx={{ display: "flex", flexDirection: "column", my: 16, gap: 4 }}
       >
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/highlights" element={<Highlights />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/press" element={<Press />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/contact" element={<Contact />} />
         </Routes>
       </Container>
+      <Footer />
     </AppTheme>
   );
 }
