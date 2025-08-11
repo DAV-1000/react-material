@@ -1,0 +1,234 @@
+// BlogPostsGrid.tsx
+import React, { useMemo, useState } from "react";
+import { useTheme } from '@mui/material/styles';
+import Link from "@mui/material/Link";
+import { Link as RouterLink } from "react-router-dom";
+
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridPaginationModel,
+} from "@mui/x-data-grid";
+import {
+  Box,
+  Avatar,
+  Chip,
+  Stack,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Container,
+} from "@mui/material";
+import type { BlogPost, Author } from "../types";
+
+const defaultPageSizeOptions = [5, 10, 25]; // Default page size options
+
+type Props = {
+  rows: BlogPost[];
+  initialPageSize?: number;
+  pageSizeOptions?: number[];
+};
+
+const DEFAULT_PAGE_SIZE = 10;
+
+export const BlogPostsGrid: React.FC<Props> = ({
+  rows,
+  initialPageSize = DEFAULT_PAGE_SIZE,
+  pageSizeOptions = defaultPageSizeOptions,
+}) => {
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
+
+  // Unique tag extraction (flatten comma-separated values)
+  const tags = useMemo(() => {
+    const s = new Set<string>();
+    rows.forEach((r) => {
+      const tagStr = r.tag ?? "";
+      tagStr
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+        .forEach((t) => s.add(t));
+    });
+    return Array.from(s).sort();
+  }, [rows]);
+
+  // Tag filter state
+  const [tagFilter, setTagFilter] = useState<string>("");
+
+  // Pagination model (v8)
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: initialPageSize ?? DEFAULT_PAGE_SIZE,
+  });
+
+  // Client-side tag filtering applied before passing to DataGrid
+  const filteredRows = useMemo(() => {
+    if (!tagFilter) return rows;
+    return rows.filter((r) => {
+      const tagStr = r.tag ?? "";
+      const parts = tagStr
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      return parts.includes(tagFilter);
+    });
+  }, [rows, tagFilter]);
+
+  // Columns typed with BlogPost generic for correct params.row typing
+  const columns: GridColDef[] = [
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<BlogPost, string>) => {
+        // stopPropagation prevents DataGrid row click/selection from also being triggered
+        const handleClick = (event: React.MouseEvent) => {
+          event.stopPropagation();
+        };
+
+        return (
+          <Link
+            component={RouterLink}
+            to={`/posts/${params.row.id}`}
+            underline="hover"
+            onClick={handleClick}
+            // optional: style or typography props here
+          >
+            {params.value}
+          </Link>
+        );
+      },
+    },
+    {
+      field: "tag",
+      headerName: "Tags",
+      width: 200,
+      sortable: true,
+      filterable: true,
+      renderCell: (params: GridRenderCellParams<BlogPost, string | undefined>) => {
+        const tagString = params.value ?? "";
+        const tagList = tagString
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean);
+        return (
+          <Stack direction="row" spacing={1} flexWrap="wrap">
+            {tagList.map((t) => (
+              <Chip key={t} label={t} size="small" />
+            ))}
+          </Stack>
+        );
+      },
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      width: 420,
+      sortable: false,
+      filterable: false,
+      renderCell: (params: GridRenderCellParams<BlogPost, string | undefined>) => (
+        <Typography
+          variant="body2"
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {params.value}
+        </Typography>
+      ),
+    },
+    {
+      field: "authors",
+      headerName: "Authors",
+      width: 220,
+      sortable: false,
+      filterable: false,
+      renderCell: (params: GridRenderCellParams<BlogPost, string | undefined>) => {
+
+         // Force authors to always be an array
+        const authors: Author[] = params && Array.isArray(params.value) ? params.value : [];
+        return (
+
+          <Stack direction="row" spacing={1} alignItems="center">
+            {authors.slice(0, 3).map((a) => (
+              <Avatar key={a.name} src={a.avatar} sx={{ width: 28, height: 28 }} alt={a.name} />
+            ))}
+            {authors.length > 3 ? (
+              <Typography variant="caption">{`+${authors.length - 3}`}</Typography>
+            ) : null}
+          </Stack>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Container maxWidth="lg" sx={{ py: 2 }}>
+      {/* Controls above the grid — simpler and avoids broken composition imports */}
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center" sx={{ mb: 2 }}>
+        {/* Tag filter */}
+        <FormControl size="small" sx={{ minWidth: 220 }}>
+          <InputLabel id="tag-filter-label">Filter by Tag</InputLabel>
+          <Select
+            labelId="tag-filter-label"
+            label="Filter by Tag"
+            value={tagFilter}
+            onChange={(e) => setTagFilter(String(e.target.value))}
+          >
+            <MenuItem value="">All tags</MenuItem>
+            {tags.map((t) => (
+              <MenuItem key={t} value={t}>
+                {t}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* (Optional) You could add more top-level controls here */}
+      </Stack>
+
+      {/* DataGrid with the built-in toolbar & quick filter (showToolbar) */}
+      <Box sx={{ height: 650, width: "100%" }}>
+        <DataGrid<BlogPost>
+          rows={filteredRows}
+          sx={{
+          borderColor: isLight ? theme.palette.grey[200] : theme.palette.grey[100],
+          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer': {
+            borderColor: isLight ? theme.palette.grey[200] : theme.palette.grey[100],
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            color: isLight ? theme.palette.grey[200] : theme.palette.grey[100],
+          },
+        }}
+          columns={columns}
+          // built-in toolbar shows quick filter + export + panels
+          showToolbar
+          // pagination (v8 uses paginationModel)
+          pagination
+          paginationModel={paginationModel}
+          onPaginationModelChange={(model: GridPaginationModel) => setPaginationModel(model)}
+          pageSizeOptions={pageSizeOptions}
+          disableRowSelectionOnClick={true}
+          // default sorting order
+          sortingOrder={["asc", "desc"]}
+          // ensure initial pagination state matches initialPageSize
+          initialState={{
+            pagination: { paginationModel: { page: 0, pageSize: initialPageSize } },
+            
+          }}
+          // performance: make sure autoHeight isn't used when virtualization desired
+        />
+      </Box>
+    </Container>
+  );
+};
+
+export default BlogPostsGrid;

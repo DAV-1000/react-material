@@ -1,0 +1,239 @@
+[
+  {
+    "id": "1",
+    "img": "https://picsum.photos/800/450?random=1",
+    "tag": "Engineering, Company",
+    "title": "Revolutionizing software development with cutting-edge tools",
+    "description":
+      "Our latest engineering tools are designed to streamline workflows and boost productivity. Discover how these innovations are transforming the software development landscape.",
+    "authors": [
+      { "name": "Remy Sharp", "avatar": "/static/images/avatar/1.jpg" },
+      { "name": "Travis Howard", "avatar": "/static/images/avatar/2.jpg" }
+    ]
+  },
+  {
+    "id":"2",
+    "img": "https://picsum.photos/800/450?random=2",
+    "tag": "Product",
+    "title": "Innovative product features that drive success",
+    "description":
+      "Explore the key features of our latest product release that are helping businesses achieve their goals. From user-friendly interfaces to robust functionality, learn why our product stands out.",
+    "authors": [{ "name": "Erica Johns", "avatar": "/static/images/avatar/6.jpg" }]
+  },
+  {
+    "id":"3",
+    "img": "https://picsum.photos/800/450?random=3",
+    "tag": "Design",
+    "title": "Designing for the future: trends and insights",
+    "description":
+      "Stay ahead of the curve with the latest design trends and insights. Our design team shares their expertise on creating intuitive and visually stunning user experiences.",
+    "authors": [{ "name": "Kate Morrison", "avatar": "/static/images/avatar/7.jpg" }]
+  },
+  {
+    "id": "4",
+    "img": "https://picsum.photos/800/450?random=4",
+    "tag": "Company",
+    "title": "Our company's journey: milestones and achievements",
+    "description":
+      "Take a look at our company's journey and the milestones we've achieved along the way. From humble beginnings to industry leader, discover our story of growth and success.",
+    "authors": [{ "name": "Cindy Baker", "avatar": "/static/images/avatar/3.jpg" }]
+  },
+  {
+    "id": "5",
+    "img": "https://picsum.photos/800/450?random=45",
+    "tag": "Engineering, Company",
+    "title": "Pioneering sustainable engineering solutions",
+    "description":
+      "Learn about our commitment to sustainability and the innovative engineering solutions we're implementing to create a greener future. Discover the impact of our eco-friendly initiatives.",
+    "authors": [
+      { "name": "Agnes Walker", "avatar": "/static/images/avatar/4.jpg" },
+      { "name": "Trevor Henderson", "avatar": "/static/images/avatar/5.jpg" }
+    ]
+  },
+  {
+    "id": "6",
+    "img": "https://picsum.photos/800/450?random=6",
+    "tag": "Product, Design",
+    "title": "Maximizing efficiency with our latest product updates",
+    "description":
+      "Our recent product updates are designed to help you maximize efficiency and achieve more. Get a detailed overview of the new features and improvements that can elevate your workflow.",
+    "authors": [{ "name": "Travis Howard", "avatar": "/static/images/avatar/2.jpg" }]
+  },
+  { 
+    "id": "7",
+    "img": "https://picsum.photos/800/450?random=7",
+    "tag": "Company, Engineering",
+    "title": "Evolving our infrastructure for the next decade",
+    "description": "We are laying the groundwork for a more scalable, secure, and efficient system to meet the demands of the future.",
+    "authors": [{ "name": "Ava Johnson", "avatar": "/static/images/avatar/1.jpg" }]
+  },
+  { 
+    "id": "8",
+    "img": "https://picsum.photos/800/450?random=8",
+    "tag": "Product",
+    "title": "New features for better project tracking",
+    "description": "Our latest update introduces real-time progress tracking and intelligent alerts for your projects.",
+    "authors": [{ "name": "Ethan Smith", "avatar": "/static/images/avatar/2.jpg" }]
+  },
+  { 
+    "id": "9",
+    "img": "https://picsum.photos/800/450?random=9",
+    "tag": "Design, Product",
+    "title": "Creating a design system that scales",
+    "description": "A deep dive into how our design team built a robust and adaptable design system for future growth.",
+    "authors": [{ "name": "Sophia Lee", "avatar": "/static/images/avatar/3.jpg" }]
+  },
+  { 
+    "id": "10",
+    "img": "https://picsum.photos/800/450?random=10",
+    "tag": "Engineering",
+    "title": "Optimizing database performance under heavy load",
+    "description": "Tips and strategies we used to reduce query times and improve overall system performance.",
+    "authors": [{ "name": "Liam Chen", "avatar": "/static/images/avatar/4.jpg" }]
+  },
+  { 
+    "id": "11",
+    "img": "https://picsum.photos/800/450?random=11",
+    "tag": "Company, Design",
+    "title": "How we nurture creativity in hybrid teams",
+    "description": "Exploring methods to inspire innovation and maintain cohesion across remote and on-site teams.",
+    "authors": [{ "name": "Mia Thompson", "avatar": "/static/images/avatar/5.jpg" }]
+  },
+  { 
+    "id": "12",
+    "img": "https://picsum.photos/800/450?random=12",
+    "tag": "Product, Engineering",
+    "title": "Integrating AI to streamline workflows",
+    "description": "We’re embedding AI-driven features into our platform to help you get more done with less effort.",
+    "authors": [{ "name": "Noah Williams", "avatar": "/static/images/avatar/6.jpg" }]
+  },
+  { 
+    "id": "13",
+    "img": "https://picsum.photos/800/450?random=13",
+    "tag": "Design",
+    "title": "Prototyping faster with collaborative tools",
+    "description": "Our designers share how they use collaborative prototyping to speed up iteration cycles.",
+    "authors": [{ "name": "Olivia Brown", "avatar": "/static/images/avatar/7.jpg" }]
+  },
+  { 
+    "id": "14",
+    "img": "https://picsum.photos/800/450?random=14",
+    "tag": "Company",
+    "title": "Celebrating our 500th customer milestone",
+    "description": "A heartfelt thank-you to all our customers who helped us reach this incredible achievement.",
+    "authors": [{ "name": "William Davis", "avatar": "/static/images/avatar/8.jpg" }]
+  },
+  { 
+    "id": "15",
+    "img": "https://picsum.photos/800/450?random=15",
+    "tag": "Product, Company",
+    "title": "Why we launched our new customer portal",
+    "description": "Learn how our customer portal is helping users find resources and solutions faster.",
+    "authors": [{ "name": "Charlotte Martinez", "avatar": "/static/images/avatar/9.jpg" }]
+  },
+  { 
+    "id": "16",
+    "img": "https://picsum.photos/800/450?random=16",
+    "tag": "Engineering, Design",
+    "title": "Collaborating across disciplines for better products",
+    "description": "The secrets to seamless designer-developer collaboration that produces remarkable results.",
+    "authors": [{ "name": "James Anderson", "avatar": "/static/images/avatar/10.jpg" }]
+  },
+  
+  { 
+    "id": "17",
+    "img": "https://picsum.photos/800/450?random=1",
+    "tag": "Company, Engineering",
+    "title": "Building a resilient engineering culture",
+    "description": "Discover how our engineering team fosters resilience through collaboration, innovation, and a commitment to continuous learning.",
+    "authors": [{ "name": "Ava Johnson", "avatar": "/static/images/avatar/1.jpg" }]
+  },
+  { 
+    "id": "21",
+    "img": "https://picsum.photos/800/450?random=2",
+    "tag": "Product",
+    "title": "Introducing our streamlined analytics dashboard",
+    "description": "We’ve revamped our analytics dashboard to provide faster insights and more intuitive navigation for your data needs.",
+    "authors": [{ "name": "Ethan Smith", "avatar": "/static/images/avatar/2.jpg" }]
+  },
+  { 
+    "id": "31",
+    "img": "https://picsum.photos/800/450?random=3",
+    "tag": "Design, Product",
+    "title": "Design principles behind our latest app refresh",
+    "description": "Go behind the scenes to see the thought process and user research that shaped our new app design.",
+    "authors": [{ "name": "Sophia Lee", "avatar": "/static/images/avatar/3.jpg" }]
+  },
+  { 
+    "id": "41",
+    "img": "https://picsum.photos/800/450?random=4",
+    "tag": "Engineering",
+    "title": "Scaling microservices for high-traffic events",
+    "description": "Learn how our engineering team prepared and optimized our infrastructure to handle record-breaking user demand.",
+    "authors": [{ "name": "Liam Chen", "avatar": "/static/images/avatar/4.jpg" }]
+  },
+  { 
+    "id": "51",
+    "img": "https://picsum.photos/800/450?random=5",
+    "tag": "Company, Design",
+    "title": "Fostering creativity in a distributed workplace",
+    "description": "See how our remote teams use collaborative tools and design thinking workshops to keep creativity flowing.",
+    "authors": [{ "name": "Mia Thompson", "avatar": "/static/images/avatar/5.jpg" }]
+  },
+  { 
+    "id": "61",
+    "img": "https://picsum.photos/800/450?random=6",
+    "tag": "Product, Engineering",
+    "title": "Automating workflows to boost productivity",
+    "description": "Explore how automation tools are helping us save time and focus on solving bigger challenges.",
+    "authors": [{ "name": "Noah Williams", "avatar": "/static/images/avatar/6.jpg" }]
+  },
+  { 
+    "id": "71",
+    "img": "https://picsum.photos/800/450?random=7",
+    "tag": "Design",
+    "title": "The art of crafting seamless user experiences",
+    "description": "A deep dive into our UX process and the design decisions that delight our users every day.",
+    "authors": [{ "name": "Olivia Brown", "avatar": "/static/images/avatar/7.jpg" }]
+  },
+  { 
+    "id": "81",
+    "img": "https://picsum.photos/800/450?random=8",
+    "tag": "Company",
+    "title": "Celebrating a decade of innovation",
+    "description": "Join us as we look back on ten years of milestones, growth, and industry-leading solutions.",
+    "authors": [{ "name": "William Davis", "avatar": "/static/images/avatar/8.jpg" }]
+  },
+  { 
+    "id": "91",
+    "img": "https://picsum.photos/800/450?random=9",
+    "tag": "Product, Company",
+    "title": "Behind the launch of our customer success program",
+    "description": "Learn about the vision and execution behind our initiative to empower customers with better resources and support.",
+    "authors": [{ "name": "Charlotte Martinez", "avatar": "/static/images/avatar/9.jpg" }]
+  },
+  { 
+    "id": "100",
+    "img": "https://picsum.photos/800/450?random=10",
+    "tag": "Engineering, Design",
+    "title": "From concept to code: bridging design and development",
+    "description": "Our process for turning beautiful concepts into functional, scalable products with tight designer-developer collaboration.",
+    "authors": [{ "name": "James Anderson", "avatar": "/static/images/avatar/10.jpg" }]
+  },
+  { 
+    "id": "101",
+    "img": "https://picsum.photos/800/450?random=11",
+    "tag": "Company, Engineering",
+    "title": "Building a resilient engineering culture",
+    "description": "Discover how our engineering team fosters resilience through collaboration, innovation, and a commitment to continuous learning.",
+    "authors": [{ "name": "Ava Johnson", "avatar": "/static/images/avatar/1.jpg" }]
+  },
+  { 
+    "id": "102",
+    "img": "https://picsum.photos/800/450?random=12",
+    "tag": "Product",
+    "title": "Introducing our streamlined analytics dashboard",
+    "description": "We’ve revamped our analytics dashboard to provide faster insights and more intuitive navigation for your data needs.",
+    "authors": [{ "name": "Ethan Smith", "avatar": "/static/images/avatar/2.jpg" }]
+  }
+]

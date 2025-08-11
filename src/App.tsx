@@ -20,11 +20,15 @@ import Press from './pages/Press';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Contact from './pages/Contact';
+import PostDetail from './pages/PostDetail';
+
+import { BlogPostServiceProvider } from "./services/BlogPostServiceContext";
 
 export default function App(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
+      <BlogPostServiceProvider>
       <AppAppBar />
       <Container
         maxWidth="lg"
@@ -39,6 +43,7 @@ export default function App(props: { disableCustomTheme?: boolean }) {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/posts/:id" element={<PostDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/press" element={<Press />} />
@@ -48,6 +53,7 @@ export default function App(props: { disableCustomTheme?: boolean }) {
         </Routes>
       </Container>
       <Footer />
+      </BlogPostServiceProvider>
     </AppTheme>
   );
 }
