@@ -15,7 +15,7 @@ export default function Blog() {
    const [error, setError] = useState<string | null>(null);
 
    useEffect(() => {
-     svc!.getAll()
+     svc!.get()
      .then((posts) => {
            setPosts(posts);
          })

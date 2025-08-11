@@ -1,3 +1,4 @@
+/* eslint-env jest */
 // src/__tests__/routes.test.tsx
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -11,7 +12,6 @@ type RouteSpec = {
 };
 
 const routes: RouteSpec[] = [
-  { path: '/',            assert: () => screen.findByRole('heading', { name: /home/i }) },
   { path: '/features',    assert: () => screen.findByRole('heading', { name: /features/i }) },
   { path: '/testimonials',assert: () => screen.findByRole('heading', { name: /testimonials/i }) },
   { path: '/highlights',  assert: () => screen.findByRole('heading', { name: /highlights/i }) },

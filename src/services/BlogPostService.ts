@@ -1,13 +1,12 @@
 import { BlogPost } from "../types";
 
 export interface BlogPostService {
-  getAll: () => Promise<BlogPost[]>;
-  getTopSix: () => Promise<BlogPost[]>;
+  get: () => Promise<BlogPost[]>;
   getById: (id: string) => Promise<BlogPost>;
 }
 
 export const blogPostService: BlogPostService = {
-  getAll: async () => {
+  get: async () => {
     const response = await fetch('/data/blogPosts.json');
     if (!response.ok) {
       throw new Error('Failed to fetch posts');
@@ -15,13 +14,8 @@ export const blogPostService: BlogPostService = {
     return await response.json();
   },
 
-  getTopSix: async () => {
-    const allPosts = await blogPostService.getAll();
-    return allPosts.slice(0, 6);
-  },
-
     getById: async (id: string) => {
-    const posts = await blogPostService.getAll();
+    const posts = await blogPostService.get();
     return posts.filter(post => {
       return post.id == id;
     })[0] || null; // Return the first match or null if not found
