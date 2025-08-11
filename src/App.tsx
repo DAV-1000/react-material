@@ -22,13 +22,11 @@ import Privacy from './pages/Privacy';
 import Contact from './pages/Contact';
 import PostDetail from './pages/PostDetail';
 
-import { BlogPostServiceProvider } from "./services/BlogPostServiceContext";
-
 export default function App(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <BlogPostServiceProvider>
+      
       <AppAppBar />
       <Container
         maxWidth="lg"
@@ -53,7 +51,6 @@ export default function App(props: { disableCustomTheme?: boolean }) {
         </Routes>
       </Container>
       <Footer />
-      </BlogPostServiceProvider>
     </AppTheme>
   );
 }

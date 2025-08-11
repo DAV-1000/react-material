@@ -4,22 +4,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from '../App';
 
-// If your pages/services call network, mock them here.
-// Example: if there's a postsService.get used by Home/Blog
-// import * as postsService from '../services/postsService';
-
-// beforeAll(() => {
-//   jest.spyOn(postsService, 'get').mockResolvedValue([]);
-// });
-
-// afterAll(() => {
-//   jest.restoreAllMocks();
-// });
-
 type RouteSpec = {
   path: string;
   // A function that returns a Promise of an assertion helper.
-  // We'll use either findByRole or findByText depending on page.
   assert: () => Promise<unknown>;
 };
 
@@ -30,7 +17,6 @@ const routes: RouteSpec[] = [
   { path: '/highlights',  assert: () => screen.findByRole('heading', { name: /highlights/i }) },
   { path: '/pricing',     assert: () => screen.findByRole('heading', { name: /pricing/i }) },
   { path: '/faq',         assert: () => screen.findByRole('heading', { name: /faq/i }) },
- // { path: '/blog',         assert: () => screen.findByRole('heading', { name: /blog/i }) },
   { path: '/about',       assert: () => screen.findByRole('heading', { name: /about/i }) },
   { path: '/careers',     assert: () => screen.findByRole('heading', { name: /careers/i }) },
   { path: '/press',       assert: () => screen.findByRole('heading', { name: /press/i }) },
