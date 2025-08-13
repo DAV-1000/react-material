@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "deploy": "gh-pages -d dist -b gh-pages"
   },
   "engines": {
     "node": "20.x"
@@ -36,6 +37,7 @@
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "gh-pages": "^6.3.0",
     "globals": "^16.3.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.0.5",
