@@ -6,8 +6,10 @@ export interface BlogPostService {
 }
 
 export const blogPostService: BlogPostService = {
+  
   get: async () => {
-    const response = await fetch('/data/blogPosts.json');
+    const dataPath = `${import.meta.env.BASE_URL}data/blogPosts.json`;
+    const response = await fetch(dataPath);
     if (!response.ok) {
       throw new Error('Failed to fetch posts');
     }

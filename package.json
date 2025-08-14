@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
-    "deploy": "gh-pages -d dist -b gh-pages"
+    "deploy": "npm run build && gh-pages -d dist -b gh-pages"
   },
   "engines": {
     "node": "20.x"
