@@ -36,7 +36,7 @@ export default function Features() {
       </div>
       <div>
         <Typography variant="h6" gutterBottom>
-          Azure Function API Value:
+          Azure Function Test API Value:
         </Typography>
         {loading ? (
           <Typography>Loading...</Typography>
