@@ -23,8 +23,8 @@ Promise<HttpResponseInit> {
     };
 };
 
-app.http('HttpExample', {
-    methods: ['GET', 'POST'],
+app.http('posts', {
+    methods: ['GET'],
     authLevel: 'anonymous',
-    handler: HttpExample
+    handler: posts
 });
