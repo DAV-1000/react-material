@@ -9,6 +9,8 @@ export const blogPostService: BlogPostService = {
   get: async () => {
     const response = await fetch('/api/HttpExample');
 
+    console.log(response.body)
+
     if (!response.ok) {
       throw new Error('Failed to fetch posts');
     }

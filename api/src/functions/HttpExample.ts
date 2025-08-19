@@ -3,23 +3,29 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 export async function HttpExample(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
-    context.log(request.url);
-    const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
 
-    if (!cosmosConnectionString) {
-        throw new Error("COSMOS_DB_CONNECTION_STRING not set");
-    }
+    // const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
 
-    const client = new CosmosClient(cosmosConnectionString);
+    // if (!cosmosConnectionString) {
+    //     throw new Error("COSMOS_DB_CONNECTION_STRING not set");
+    // }
 
-    const database = client.database("cosmicworks");
-    const container = database.container("posts");
+    // const client = new CosmosClient(cosmosConnectionString);
 
-    const { resources } = await container.items.query("SELECT * FROM c").fetchAll();
+    // const database = client.database("cosmicworks");
+    // const container = database.container("posts");
+
+    // const { resources } = await container.items.query("SELECT * FROM c").fetchAll();
+
+    // return {
+    //     status: 200,
+    //     jsonBody: resources
+    // };
+
 
     return {
         status: 200,
-        jsonBody: resources
+        body: "Hello from HttpExample function! " + process.env.TEST_SECRET_STRING
     };
 };
 
