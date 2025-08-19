@@ -7,7 +7,7 @@ export interface BlogPostService {
 
 export const blogPostService: BlogPostService = {
   get: async () => {
-    const response = await fetch('/api/HttpExample');
+    const response = await fetch('/api/posts');
 
     console.log(response.text());
 
