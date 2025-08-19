@@ -40,10 +40,9 @@ jobs:
           api_location: "api" # Api source code path - optional
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-        env:
-          COSMOS_DB_CONNECTION_STRING: ${{ secrets.COSMOS_DB_CONNECTION_STRING }}
-          TEST_SECRET_STRING: ${{ secrets.TEST_SECRET_STRING }}
             # Add any other environment variables your app requires here
+        env:
+          TEST_SECRET_STRING: ${{ secrets.TEST_SECRET_STRING }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
