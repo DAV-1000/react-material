@@ -3,7 +3,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 export async function HttpExample(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
-
+    context.log(request.url);
     const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
 
     if (!cosmosConnectionString) {
