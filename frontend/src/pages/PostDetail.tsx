@@ -57,12 +57,14 @@ export default function PostDetail() {
     return null; // Or a fallback UI
   }
 
+  const IMAGE_URL = import.meta.env.VITE_BLOG_IMAGE_URL;
+
   return (
     <Card sx={{ maxWidth: 800, mx: 'auto' }}>
       {post.img && (
         <CardMedia
           component="img"
-          image={post.img}
+          image={IMAGE_URL + post.img}
           alt={post.title}
           sx={{ aspectRatio: '16 / 9' }}
         />
