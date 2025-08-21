@@ -23,9 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# static files
-public/blog/
-
-# Env vars
+# Environment
 .env
 .env.local
