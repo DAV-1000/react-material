@@ -44,6 +44,8 @@ const StyledCardItem: React.FC<StyledCardItemProps> = ({
   if (!data) {
     return ''; 
   }
+
+  const IMAGE_URL = import.meta.env.VITE_BLOG_IMAGE_URL;
   
   return (
     <StyledCard
@@ -63,7 +65,7 @@ const StyledCardItem: React.FC<StyledCardItemProps> = ({
       <CardMedia
         component="img"
         alt={data.title}
-        image={data.img}
+        image={IMAGE_URL + data.img}
         sx={{
           aspectRatio: '16 / 9',
           borderBottom: '1px solid',
