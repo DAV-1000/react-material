@@ -1,10 +1,11 @@
-// src/pages/PostDetail.tsx
 // eslint-disable-next-line react-x/no-use-context
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Typography, Card, CardMedia, CardContent, Box, Button } from '@mui/material';
 import { BlogPostServiceContext } from '../services/BlogPostServiceContext';
 import type { BlogPost }  from '../types';
+import ReactMarkdown from "react-markdown";
+import PostLayout from '../components/PostLayout';
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -60,26 +61,6 @@ export default function PostDetail() {
   const IMAGE_URL = import.meta.env.VITE_BLOG_IMAGE_URL;
 
   return (
-    <Card sx={{ maxWidth: 800, mx: 'auto' }}>
-      {post.img && (
-        <CardMedia
-          component="img"
-          image={IMAGE_URL + post.img}
-          alt={post.title}
-          sx={{ aspectRatio: '16 / 9' }}
-        />
-      )}
-      <CardContent>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {post.title}
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-          Tags: {post.tag || '-'}
-        </Typography>
-        <Typography variant="body1" paragraph>
-          {post.description}
-        </Typography>
-      </CardContent>
-    </Card>
+<PostLayout data={post} />
   );
 }
