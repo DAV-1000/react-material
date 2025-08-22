@@ -8,21 +8,20 @@ import {
 } from "@mui/material";
 import Author from "../components/Author";
 import { BlogPost } from "../types";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface PostLayoutProps {
-  data?: BlogPost;
+  post?: BlogPost;
+  content?: string;
 }
 
 const PostLayout: React.FC<PostLayoutProps> = ({
-  data,
+  post: data, content: markdownContent
 }) => {
 
   if (!data) {
     return '';
-  }
-
-  if (!data) {
-    return ''; 
   }
 
   const IMAGE_URL = import.meta.env.VITE_BLOG_IMAGE_URL;
@@ -63,7 +62,7 @@ const PostLayout: React.FC<PostLayoutProps> = ({
       <Grid container spacing={4}>
         <Grid size={{ xs: 12 }}>
           <Box>
-            TODO: CONTENT HERE
+<ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownContent}</ReactMarkdown>
           </Box>
         </Grid>
       </Grid>
