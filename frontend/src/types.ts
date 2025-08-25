@@ -16,3 +16,10 @@ export interface Tag {
   tag: string | null;
   label: string;
 };
+
+export interface User {
+  userId: string;
+  userDetails: string;
+  identityProvider: string;
+  claims: { typ: string; val: string }[];
+}
