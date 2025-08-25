@@ -5,10 +5,12 @@ import { useAuth } from "../hooks/useAuth";
 const AuthButtons: React.FC = () => {
   const user = useAuth();
 
+  const currentPath: string = window.location.pathname + window.location.search;
+
   if (!user) {
     // User not logged in → show Sign In
     return (
-      <a href={`${window.location.origin}/.auth/login/github`}>
+      <a href={`${window.location.origin}/.auth/login/github?post_login_redirect_uri=${encodeURIComponent(currentPath)}`}>
         <Button color="primary" variant="text" size="small">
           Sign in with GitHub
         </Button>
