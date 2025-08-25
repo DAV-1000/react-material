@@ -15,6 +15,7 @@ import ColorModeIconDropdown from "../shared-theme/ColorModeIconDropdown";
 import Sitemark from "./SitemarkIcon";
 
 import { Link as RouterLink } from "react-router-dom";
+import AuthButtons from "./AuthButtons";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -126,21 +127,7 @@ export default function AppAppBar() {
             }}
           >
             {
-              <a
-                href={`/.auth/login/github`}
-                style={{ textDecoration: "none" }}
-              >
-                <Button color="primary" variant="text" size="small">
-                  Sign in with GitHub
-                </Button>
-              </a>
-            }
-            {
-              <a href={`$/.auth/logout`} style={{ textDecoration: "none" }}>
-                <Button color="primary" variant="text" size="small">
-                  Signout
-                </Button>
-              </a>
+              <AuthButtons />
             }
             {/* <Button color="primary" variant="text" size="small">
               Sign in
