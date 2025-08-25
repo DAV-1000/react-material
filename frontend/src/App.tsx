@@ -21,6 +21,7 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Contact from './pages/Contact';
 import PostDetail from './pages/PostDetail';
+import EditPost from './pages/EditPost';
 
 export default function App(props: { disableCustomTheme?: boolean }) {
   return (
@@ -42,6 +43,7 @@ export default function App(props: { disableCustomTheme?: boolean }) {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/posts/:id" element={<PostDetail />} />
+            <Route path="/edit-post/:id" element={<EditPost />} />
             <Route path="/about" element={<About />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/press" element={<Press />} />

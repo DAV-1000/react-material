@@ -125,6 +125,13 @@ export default function AppAppBar() {
               alignItems: "center",
             }}
           >
+            {
+              <a href={`${window.location.origin}/.auth/login/github`} style={{ textDecoration: "none" }}>
+                <Button color="primary" variant="text" size="small">
+                  Sign in with GitHub
+                </Button>
+              </a>
+            }
             {/* <Button color="primary" variant="text" size="small">
               Sign in
             </Button>
