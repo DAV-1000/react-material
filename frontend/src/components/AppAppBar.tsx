@@ -126,9 +126,16 @@ export default function AppAppBar() {
             }}
           >
             {
-              <a href={`${window.location.origin}/.auth/login/github`} style={{ textDecoration: "none" }}>
+              <a href={`/.auth/login/github`} style={{ textDecoration: "none" }}>
                 <Button color="primary" variant="text" size="small">
                   Sign in with GitHub
+                </Button>
+              </a>
+            }
+                        {
+              <a href={`$/.auth/logout`} style={{ textDecoration: "none" }}>
+                <Button color="primary" variant="text" size="small">
+                  Signout
                 </Button>
               </a>
             }
