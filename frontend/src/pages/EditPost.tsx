@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import PostEditor from "../components/PostEditor";
 
 export default function EditPost() {
 
@@ -9,10 +10,7 @@ export default function EditPost() {
         <Typography variant="h1" gutterBottom>
           Edit Post
         </Typography>
-        <Typography>
-          Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
-          consectetur, adipisci velit...
-        </Typography>
+        <PostEditor></PostEditor>
       </div>
     </Box>
   );
