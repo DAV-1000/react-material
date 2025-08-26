@@ -1,23 +1,33 @@
-// src/pages/PostDetail.tsx
 // eslint-disable-next-line react-x/no-use-context
-import React, { useEffect, useState, useContext } from 'react';
-import { useParams, Link as RouterLink } from 'react-router-dom';
-import { Typography, Card, CardMedia, CardContent, Box, Button } from '@mui/material';
-import { BlogPostServiceContext } from '../services/BlogPostServiceContext';
-import type { BlogPost }  from '../types';
-import EditPostButton from '../components/EditPostButton';
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, Link as RouterLink } from "react-router-dom";
+import {
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Box,
+  Button,
+} from "@mui/material";
+import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
+import type { BlogPost } from "../types";
+import ReactMarkdown from "react-markdown";
+import PostLayout from "../components/PostLayout";
+import EditPostButton from "../components/EditPostButton";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
   // eslint-disable-next-line react-x/no-use-context
   const blogPostService = useContext(BlogPostServiceContext);
   const [post, setPost] = useState<BlogPost | null>(null);
+  const [content, setContent] = useState<string>("");
+  const [loadingContent, setLoadingContent] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) {
-      setError('No post id provided.');
+      setError("No post id provided.");
       setLoading(false);
       return;
     }
@@ -26,15 +36,39 @@ export default function PostDetail() {
 
     blogPostService!
       .getById(id)
-      .then(data => {
+      .then((data) => {
         setPost(data);
         setLoading(false);
-        if(data===null) {
-          setError('Post not found.');
+        if (data === null) {
+          setError("Post not found.");
         }
       })
       .catch(() => {
-        setError('Error retrieving post.');
+        setError("Error retrieving post.");
+        setLoading(false);
+      });
+  }, [id, blogPostService]);
+
+  useEffect(() => {
+    if (!id) {
+      setError("No post id provided.");
+      setLoadingContent(false);
+      return;
+    }
+
+    setLoadingContent(true);
+
+    blogPostService!
+      .getContent(id ?? null)
+      .then((content) => {
+        setContent(content);
+        setLoading(false);
+        if (content === null) {
+          setError("Post content not found.");
+        }
+      })
+      .catch(() => {
+        setError("Error retrieving post content.");
         setLoading(false);
       });
   }, [id, blogPostService]);
@@ -58,32 +92,10 @@ export default function PostDetail() {
     return null; // Or a fallback UI
   }
 
-  const IMAGE_URL = import.meta.env.VITE_BLOG_IMAGE_URL;
-
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
       <EditPostButton id={post.id} />
-    <Card sx={{ maxWidth: 800, mx: 'auto' }}>
-      {post.img && (
-        <CardMedia
-          component="img"
-          image={IMAGE_URL + post.img}
-          alt={post.title}
-          sx={{ aspectRatio: '16 / 9' }}
-        />
-      )}
-      <CardContent>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {post.title}
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-          Tags: {post.tag || '-'}
-        </Typography>
-        <Typography variant="body1" paragraph>
-          {post.description}
-        </Typography>
-      </CardContent>
-    </Card>
+      <PostLayout post={post} content={content} />
     </Box>
   );
 }
