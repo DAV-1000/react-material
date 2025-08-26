@@ -21,5 +21,6 @@ export interface User {
   userId: string;
   userDetails: string;
   identityProvider: string;
+  userRoles: string[];
   claims: { typ: string; val: string }[];
 }

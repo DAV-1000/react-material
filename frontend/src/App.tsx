@@ -22,7 +22,7 @@ import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
 import PostDetail from "./pages/PostDetail";
 import EditPost from "./pages/EditPost";
-import ProtectedRoute from "./hooks/ProtectedRoute";
+import ProtectedRoute from "./context/ProtectedRoute";
 
 export default function App(props: { disableCustomTheme?: boolean }) {
   return (

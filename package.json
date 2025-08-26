@@ -2,9 +2,11 @@
   "name": "react-material-root",
   "private": true,
   "scripts": {
-    "start:all": "concurrently \"npm run start --prefix api\" \"npm run dev --prefix frontend\""
+    "start:all": "concurrently \"npm run start --prefix api\" \"npm run dev --prefix frontend\"",
+    "build:all": "concurrently \"npm run build --prefix api\" \"npm run build --prefix frontend\""
   },
   "devDependencies": {
+    "@azure/static-web-apps-cli": "^2.0.6",
     "concurrently": "^8.2.2"
   }
 }

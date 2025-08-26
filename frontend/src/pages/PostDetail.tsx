@@ -5,6 +5,7 @@ import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Typography, Card, CardMedia, CardContent, Box, Button } from '@mui/material';
 import { BlogPostServiceContext } from '../services/BlogPostServiceContext';
 import type { BlogPost }  from '../types';
+import EditPostButton from '../components/EditPostButton';
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -60,6 +61,8 @@ export default function PostDetail() {
   const IMAGE_URL = import.meta.env.VITE_BLOG_IMAGE_URL;
 
   return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <EditPostButton id={post.id} />
     <Card sx={{ maxWidth: 800, mx: 'auto' }}>
       {post.img && (
         <CardMedia
@@ -81,5 +84,6 @@ export default function PostDetail() {
         </Typography>
       </CardContent>
     </Card>
+    </Box>
   );
 }

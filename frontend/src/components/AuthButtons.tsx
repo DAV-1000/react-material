@@ -1,16 +1,21 @@
 import React from "react";
 import { Button } from "@mui/material"; // or your UI lib
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthContext";
 
 const AuthButtons: React.FC = () => {
-  const user = useAuth();
+  const { user, userLoading } = useAuth();
 
   const currentPath: string = window.location.pathname + window.location.search;
+  
+  if (userLoading) {
+    // User details being retrieved → show nothing
+    return null;
+  }
 
   if (!user) {
     // User not logged in → show Sign In
     return (
-      <a href={`${window.location.origin}/.auth/login/github?post_login_redirect_uri=${encodeURIComponent(currentPath)}`}>
+      <a href={`/.auth/login/github?post_login_redirect_uri=${encodeURIComponent(currentPath)}`}>
         <Button color="primary" variant="text" size="small">
           Sign in with GitHub
         </Button>
@@ -20,7 +25,7 @@ const AuthButtons: React.FC = () => {
 
   // User logged in → show Sign Out
   return (
-    <a href={`${window.location.origin}/.auth/logout`}>
+    <a href={`/.auth/logout`}>
       <Button color="secondary" variant="text" size="small">
         Sign out ({user.userDetails})
       </Button>
