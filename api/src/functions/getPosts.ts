@@ -2,7 +2,7 @@ import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 
-const cache = new Map<string, { value: any; expiresAt: number }>();
+export const cache = new Map<string, { value: any; expiresAt: number }>();
 
 export async function posts(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {

@@ -3,16 +3,13 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import {
   Typography,
-  Card,
-  CardMedia,
-  CardContent,
   Box,
   Button,
 } from "@mui/material";
 import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
 import type { BlogPost } from "../types";
-import ReactMarkdown from "react-markdown";
 import PostLayout from "../components/PostLayout";
+import EditPostButton from "../components/EditPostButton";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -48,7 +45,7 @@ export default function PostDetail() {
       });
   }, [id, blogPostService]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!id) {
       setError("No post id provided.");
       setLoadingContent(false);
@@ -91,7 +88,10 @@ export default function PostDetail() {
     return null; // Or a fallback UI
   }
 
-
-
-  return <PostLayout post={post} content={content} />;
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <EditPostButton id={post.id} />
+      <PostLayout post={post} content={content} />
+    </Box>
+  );
 }

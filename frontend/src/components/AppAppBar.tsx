@@ -15,6 +15,7 @@ import ColorModeIconDropdown from "../shared-theme/ColorModeIconDropdown";
 import Sitemark from "./SitemarkIcon";
 
 import { Link as RouterLink } from "react-router-dom";
+import AuthButtons from "./AuthButtons";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -125,12 +126,9 @@ export default function AppAppBar() {
               alignItems: "center",
             }}
           >
-            {/* <Button color="primary" variant="text" size="small">
-              Sign in
-            </Button>
-            <Button color="primary" variant="contained" size="small">
-              Sign up
-            </Button> */}
+            
+              <AuthButtons />
+            
             <ColorModeIconDropdown />
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" }, gap: 1 }}>
