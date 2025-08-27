@@ -2,7 +2,7 @@ import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 // reuse the same cache map defined in GET
-import { cache } from "./getPosts";
+import { cache } from "./getPosts.js";
 
 export async function updatePost(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {

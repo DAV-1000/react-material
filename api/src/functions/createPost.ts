@@ -1,6 +1,6 @@
 import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { cache } from "./getPosts"; // reuse the cache
+import { cache } from "./getPosts.js"; // reuse the cache
 import { v4 as uuidv4 } from "uuid"; // npm install uuid
 
 export async function createPost(request: HttpRequest, context: InvocationContext): 

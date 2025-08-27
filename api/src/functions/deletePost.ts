@@ -1,6 +1,6 @@
 import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { cache } from "./getPosts"; // reuse the cache
+import { cache } from "./getPosts.js"; // reuse the cache
 
 export async function deletePost(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
