@@ -63,13 +63,12 @@ export default function EditPost() {
     return null; // Or a fallback UI
   }
 
-    const handleSave = async (value: BlogPost) => {
+  const handleSave = async (value: BlogPost) => {
     setLoading(true);
     try {
       await blogPostService.update(value.id, value);
       showSnackbar("Post saved successfully!", "success");
     } catch (err: any) {
-      console.error(err);
       showSnackbar(`Failed to save post: ${err.message}`, "error");
     } finally {
       setLoading(false);
