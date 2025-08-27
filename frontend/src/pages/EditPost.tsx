@@ -5,16 +5,25 @@ import { BlogPost } from "../types";
 import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
-import { Button } from "@mui/material";
-
+import { Button, Snackbar, Alert } from "@mui/material";
+import { useSnackbar } from "../hooks/useSnackbar";
 export default function EditPost() {
-  const { id } = useParams<{ id: string }>();
   // eslint-disable-next-line react-x/no-use-context
   const blogPostService = useContext(BlogPostServiceContext);
+
+  if (!blogPostService) {
+    throw new Error("BlogPostServiceContext is not provided");
+  }
+  const { showSnackbar, SnackbarComponent } = useSnackbar();
   const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<{
+    message: string;
+    severity: "success" | "error";
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
+  const { id } = useParams<{ id: string }>();
   useEffect(() => {
     if (!id) {
       setError("No post id provided.");
@@ -39,7 +48,7 @@ export default function EditPost() {
       });
   }, [id, blogPostService]);
 
-    if (error) {
+  if (error) {
     return (
       <Box>
         <Typography color="error">{error}</Typography>
@@ -54,10 +63,20 @@ export default function EditPost() {
     return null; // Or a fallback UI
   }
 
-  async function handleSave(value: BlogPost): Promise<void> {
-    const updated = await blogPostService!.update(value.id, value);
-    console.log(updated);
-  }
+    const handleSave = async (value: BlogPost) => {
+    setLoading(true);
+    try {
+      await blogPostService.update(value.id, value);
+      showSnackbar("Post saved successfully!", "success");
+    } catch (err: any) {
+      console.error(err);
+      showSnackbar(`Failed to save post: ${err.message}`, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClose = () => setStatus(null);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -65,7 +84,12 @@ export default function EditPost() {
         <Typography variant="h1" gutterBottom>
           Edit Post
         </Typography>
-        <PostEditor post={post} onSave={handleSave}></PostEditor>
+        <PostEditor
+          post={post}
+          onSave={handleSave}
+          disabled={loading}
+        ></PostEditor>
+        {SnackbarComponent}
       </div>
     </Box>
   );

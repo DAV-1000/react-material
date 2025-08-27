@@ -16,22 +16,16 @@ import { Author, BlogPost } from "../types";
 export interface PostEditorProps {
   post: BlogPost | null;
   onSave: (value: BlogPost) => void; // event callback
+  disabled: boolean
 }
 
-const PostEditor: React.FC<PostEditorProps> = ({ post, onSave }) => {
+const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
+  if(!post) {
+    return <Typography variant="h6">No post data available.</Typography>;
+  }
+  
   const [entity, setEntity] = useState<BlogPost>(
-    post ?? {
-      id: "",
-      img: "https://picsum.photos/800/450?random=1",
-      tag: "Engineering, Company",
-      title: "Revolutionizing software development with cutting-edge tools",
-      description:
-        "Our latest engineering tools are designed to streamline workflows and boost productivity. Discover how these innovations are transforming the software development landscape.",
-      authors: [
-        { name: "Remy Sharp", avatar: "/static/images/avatar/1.jpg" },
-        { name: "Travis Howard", avatar: "/static/images/avatar/2.jpg" },
-      ],
-    }
+    post 
   );
 
   const handleChange = (
@@ -183,6 +177,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave }) => {
                 variant="contained"
                 color="primary"
                 onClick={handleSubmit}
+                disabled= {disabled}
               >
                 Save Entity
               </Button>
