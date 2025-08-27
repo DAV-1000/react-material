@@ -3,15 +3,11 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import {
   Typography,
-  Card,
-  CardMedia,
-  CardContent,
   Box,
   Button,
 } from "@mui/material";
 import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
 import type { BlogPost } from "../types";
-import ReactMarkdown from "react-markdown";
 import PostLayout from "../components/PostLayout";
 import EditPostButton from "../components/EditPostButton";
 
