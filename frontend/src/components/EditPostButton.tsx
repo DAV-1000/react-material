@@ -1,13 +1,14 @@
 import React from "react";
-import { Button } from "@mui/material"; // or your UI lib
+import { IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import { useAuth } from "../context/AuthContext";
 import { Link as RouterLink } from "react-router-dom";
 
-interface AuthButtonsProps {
+interface EditButtonProps {
   id?: string;
 }
 
-const AuthButtons: React.FC<AuthButtonsProps> = ({ id }) => {
+const EditButton: React.FC<EditButtonProps> = ({ id }) => {
   if (!id) {
     return null;
   }
@@ -32,16 +33,16 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({ id }) => {
   const toRoute = `../edit-post/${encodeURIComponent(id)}`;
 
   return (
-    <Button
+    <IconButton
       component={RouterLink}
       to={toRoute}
       color="secondary"
-      variant="text"
       size="small"
+      aria-label="edit post"
     >
-      Edit
-    </Button>
+      <EditIcon fontSize="small" />
+    </IconButton>
   );
 };
 
-export default AuthButtons;
+export default EditButton;
