@@ -18,6 +18,7 @@ import { useGridApiContext } from "@mui/x-data-grid";
 import { Badge } from "@mui/material";
 
 import { GridToolbarProps } from '@mui/x-data-grid';
+import AddPostButton from "./AddPostButton";
 
 export interface BlogPostsGridToolbarProps extends GridToolbarProps {
     refreshPosts: () => void; // TODO implement server side paging etc and refactor this out.
@@ -33,15 +34,7 @@ const BlogPostsGridToolbar: React.FC = ( ) => {
   };
   return (
     <Toolbar>
-      <Tooltip title="Add new">
-        <ToolbarButton
-          // ref={newPanelTriggerRef}
-          aria-describedby="new-panel"
-          // onClick={() => setNewPanelOpen((prev) => !prev)}
-        >
-          <AddIcon fontSize="small" />
-        </ToolbarButton>
-      </Tooltip>
+     <AddPostButton />
       {/* <Tooltip title="Refresh">
         <ToolbarButton onClick={handleRefresh}>
           <RefreshIcon fontSize="small" />
