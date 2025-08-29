@@ -3,11 +3,10 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "types": ["@testing-library/jest-dom", "node"]
+    "types": ["node"]
   },
   "include": [
     "src",
-    "jest.setup.ts",
     "global.d.ts",
     "src/**/*.test.ts",
     "src/**/*.test.tsx"
