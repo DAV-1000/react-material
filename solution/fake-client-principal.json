@@ -1,0 +1,9 @@
+{
+  "original": {
+    "identityProvider": "github",
+    "userId": "123456",
+    "userDetails": "testuser",
+    "userRoles": ["editor"]
+  },
+  "base64": "BASE 64: eyJpZGVudGl0eVByb3ZpZGVyIjoiZ2l0aHViIiwidXNlcklkIjoiMTIzNDU2IiwidXNlckRldGFpbHMiOiJ0ZXN0dXNlciIsInVzZXJSb2xlcyI6WyJlZGl0b3IiXX0="
+}
