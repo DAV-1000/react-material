@@ -9,12 +9,12 @@ import { getClientPrincipal, requireRole } from "../auth.js";
 
 // reuse the same cache map defined in GET
 import { cache } from "./getPosts.js";
-import { ClientPrincipal } from "../types.js";
 
 export async function updatePost(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
+  
   const principal = getClientPrincipal(request);
 
   // Enforce editor role

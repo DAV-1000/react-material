@@ -2,9 +2,16 @@ import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { cache } from "./getPosts.js"; // reuse the cache
 import { v4 as uuidv4 } from "uuid"; // npm install uuid
+import { getClientPrincipal, requireRole } from "../auth.js";
 
 export async function createPost(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
+      const principal = getClientPrincipal(request);
+    
+      // Enforce editor role
+      const authResponse = requireRole(principal, ["editor"]);
+      if (authResponse) return authResponse;
+      
     const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
     if (!cosmosConnectionString) {
         throw new Error("COSMOS_DB_CONNECTION_STRING not set");
