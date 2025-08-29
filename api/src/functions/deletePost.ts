@@ -1,6 +1,8 @@
-import { CosmosClient } from "@azure/cosmos";
+
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { cache } from "./getPosts.js"; // reuse the cache
+import { CosmosClient } from "@azure/cosmos";
+import { getClientPrincipal, requireRole } from "../auth.js";
 
 export async function deletePost(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
@@ -8,7 +10,12 @@ Promise<HttpResponseInit> {
     if (!cosmosConnectionString) {
         throw new Error("COSMOS_DB_CONNECTION_STRING not set");
     }
-
+      const principal = getClientPrincipal(request);
+    
+      // Enforce editor role
+      const authResponse = requireRole(principal, ["editor"]);
+      if (authResponse) return authResponse;
+      
     const client = new CosmosClient(cosmosConnectionString);
     const database = client.database("cosmicworks");
     const container = database.container("posts");
