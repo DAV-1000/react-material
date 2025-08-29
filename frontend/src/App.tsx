@@ -23,6 +23,7 @@ import Contact from "./pages/Contact";
 import PostDetail from "./pages/PostDetail";
 import EditPost from "./pages/EditPost";
 import ProtectedRoute from "./context/ProtectedRoute";
+import CreatePost from "./pages/CreatePost";
 
 export default function App(props: { disableCustomTheme?: boolean }) {
   return (
@@ -49,6 +50,14 @@ export default function App(props: { disableCustomTheme?: boolean }) {
             element={
               <ProtectedRoute>
                 <EditPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-post"
+            element={
+              <ProtectedRoute>
+                <CreatePost />
               </ProtectedRoute>
             }
           />

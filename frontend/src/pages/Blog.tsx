@@ -1,41 +1,51 @@
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import BlogPostsGrid from '../components/BlogPostsGrid';
 import { useBlogPostService } from '../services/BlogPostServiceContext';
 import { BlogPost } from '../types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export default function Blog() {
- const svc = useBlogPostService();
- const [posts, setPosts] = useState<BlogPost[]>([]);
-  //  const [searchTerm, setSearchTerm] = useState<string | null>(null);
-  //  const [selectedTag, setSelectedTag] = useState<string | null>(null);
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState<string | null>(null);
+  const svc = useBlogPostService();
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-   useEffect(() => {
-     svc!.get()
-     .then((posts) => {
-           setPosts(posts);
-         })
-       .catch((err) => setError(err.message))
-       .finally(() => setLoading(false));
-   }, [svc]);
+  // Fetch posts function that can be reused
+  const fetchPosts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await svc!.get();
+      setPosts(data);
+    } catch (err: any) {
+      setError(err.message || 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, [svc]);
+
+  // Initial load
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   if (loading) return <div>Loading data...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <div data-testid="blog-page">
         <Typography variant="h1" gutterBottom>
           Posts
         </Typography>
         <Typography>Browse all articles posted by our contributors</Typography>
+        <Button variant="outlined" onClick={fetchPosts} sx={{ mt: 2 }}>
+          Refresh
+        </Button>
       </div>
-<BlogPostsGrid rows={posts} initialPageSize={10} />
+      <BlogPostsGrid refreshPosts={fetchPosts} rows={posts} initialPageSize={10} />
     </Box>
   );
 }

@@ -1,14 +1,15 @@
 // BlogPostsGrid.tsx
 import React, { useMemo, useState } from "react";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
+import BlogPostsGridToolbar from "./BlogPostsGridToolbar";
 
 import {
   DataGrid,
   GridColDef,
-  GridRenderCellParams,
   GridPaginationModel,
+  GridRenderCellParams,
 } from "@mui/x-data-grid";
 import {
   Box,
@@ -23,6 +24,8 @@ import {
   Container,
 } from "@mui/material";
 import type { BlogPost, Author } from "../types";
+import EditPostButton from "./EditPostButton";
+import DeletePostButton from "./DeletePostButton";
 
 const defaultPageSizeOptions = [5, 10, 25]; // Default page size options
 
@@ -30,6 +33,7 @@ type Props = {
   rows: BlogPost[];
   initialPageSize?: number;
   pageSizeOptions?: number[];
+  refreshPosts?: () => void; // TODO implement server side paging etc.
 };
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -40,7 +44,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
   pageSizeOptions = defaultPageSizeOptions,
 }) => {
   const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
+  const isLight = theme.palette.mode === "light";
 
   // Unique tag extraction (flatten comma-separated values)
   const tags = useMemo(() => {
@@ -81,6 +85,29 @@ export const BlogPostsGrid: React.FC<Props> = ({
   // Columns typed with BlogPost generic for correct params.row typing
   const columns: GridColDef[] = [
     {
+      field: "id",
+      width: 114,
+      minWidth: 114,
+      maxWidth: 114,
+      sortable: false, // prevent sorting
+      filterable: false, // prevent filtering
+      disableColumnMenu: true, // hide the column menu
+      hideable: false, // hide from column chooser / column panel
+      headerName: "",
+      renderCell: (params: GridRenderCellParams<BlogPost, string>) => {
+        return (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ height: "100%", alignItems: "center" }}
+          >
+            <EditPostButton id={params.value} />
+            <DeletePostButton id={params.value} />
+          </Stack>
+        );
+      },
+    },
+    {
       field: "title",
       headerName: "Title",
       flex: 1,
@@ -109,14 +136,21 @@ export const BlogPostsGrid: React.FC<Props> = ({
       width: 200,
       sortable: true,
       filterable: true,
-      renderCell: (params: GridRenderCellParams<BlogPost, string | undefined>) => {
+      renderCell: (
+        params: GridRenderCellParams<BlogPost, string | undefined>
+      ) => {
         const tagString = params.value ?? "";
         const tagList = tagString
           .split(",")
           .map((t) => t.trim())
           .filter(Boolean);
         return (
-          <Stack direction="row" spacing={1} flexWrap="wrap">
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            sx={{ height: "100%", alignItems: "center" }}
+          >
             {tagList.map((t) => (
               <Chip key={t} label={t} size="small" />
             ))}
@@ -130,39 +164,60 @@ export const BlogPostsGrid: React.FC<Props> = ({
       width: 420,
       sortable: false,
       filterable: false,
-      renderCell: (params: GridRenderCellParams<BlogPost, string | undefined>) => (
-        <Typography
-          variant="body2"
+      renderCell: (
+        params: GridRenderCellParams<BlogPost, string | undefined>
+      ) => (
+        <Box
           sx={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
+            height: "100%", // Fill the entire cell height
+            display: "flex", // Enable flex layout
+            alignItems: "center", // Vertically center content
           }}
         >
-          {params.value}
-        </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {params.value}
+          </Typography>
+        </Box>
       ),
     },
     {
       field: "authors",
       headerName: "Authors",
-      width: 220,
       sortable: false,
       filterable: false,
-      renderCell: (params: GridRenderCellParams<BlogPost, string | undefined>) => {
-
-         // Force authors to always be an array
-        const authors: Author[] = params && Array.isArray(params.value) ? params.value : [];
+      renderCell: (
+        params: GridRenderCellParams<BlogPost, string | undefined>
+      ) => {
+        // Force authors to always be an array
+        const authors: Author[] =
+          params && Array.isArray(params.value) ? params.value : [];
         return (
-
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ height: "100%", alignItems: "center" }}
+          >
             {authors.slice(0, 3).map((a) => (
-              <Avatar key={a.name} src={a.avatar} sx={{ width: 28, height: 28 }} alt={a.name} />
+              <Avatar
+                key={a.name}
+                src={a.avatar}
+                sx={{ width: 28, height: 28 }}
+                alt={a.name}
+              />
             ))}
             {authors.length > 3 ? (
-              <Typography variant="caption">{`+${authors.length - 3}`}</Typography>
+              <Typography variant="caption">{`+${
+                authors.length - 3
+              }`}</Typography>
             ) : null}
           </Stack>
         );
@@ -173,7 +228,12 @@ export const BlogPostsGrid: React.FC<Props> = ({
   return (
     <Container maxWidth="lg" sx={{ py: 2 }}>
       {/* Controls above the grid — simpler and avoids broken composition imports */}
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center" sx={{ mb: 2 }}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        alignItems="center"
+        sx={{ mb: 2 }}
+      >
         {/* Tag filter */}
         <FormControl size="small" sx={{ minWidth: 220 }}>
           <InputLabel id="tag-filter-label">Filter by Tag</InputLabel>
@@ -200,29 +260,42 @@ export const BlogPostsGrid: React.FC<Props> = ({
         <DataGrid<BlogPost>
           rows={filteredRows}
           sx={{
-          borderColor: isLight ? theme.palette.grey[200] : theme.palette.grey[100],
-          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer': {
-            borderColor: isLight ? theme.palette.grey[200] : theme.palette.grey[100],
-          },
-          '& .MuiDataGrid-columnSeparator': {
-            color: isLight ? theme.palette.grey[200] : theme.palette.grey[100],
-          },
-        }}
+            borderColor: isLight
+              ? theme.palette.grey[200]
+              : theme.palette.grey[100],
+            "& .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer":
+              {
+                borderColor: isLight
+                  ? theme.palette.grey[200]
+                  : theme.palette.grey[100],
+              },
+            "& .MuiDataGrid-columnSeparator": {
+              color: isLight
+                ? theme.palette.grey[200]
+                : theme.palette.grey[100],
+            },
+          }}
           columns={columns}
-          // built-in toolbar shows quick filter + export + panels
+          slots={{
+            toolbar:BlogPostsGridToolbar }}
+
+
           showToolbar
           // pagination (v8 uses paginationModel)
           pagination
           paginationModel={paginationModel}
-          onPaginationModelChange={(model: GridPaginationModel) => setPaginationModel(model)}
+          onPaginationModelChange={(model: GridPaginationModel) =>
+            setPaginationModel(model)
+          }
           pageSizeOptions={pageSizeOptions}
           disableRowSelectionOnClick={true}
           // default sorting order
           sortingOrder={["asc", "desc"]}
           // ensure initial pagination state matches initialPageSize
           initialState={{
-            pagination: { paginationModel: { page: 0, pageSize: initialPageSize } },
-            
+            pagination: {
+              paginationModel: { page: 0, pageSize: initialPageSize },
+            },
           }}
           // performance: make sure autoHeight isn't used when virtualization desired
         />
