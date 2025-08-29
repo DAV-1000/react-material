@@ -46,6 +46,7 @@ jobs:
   playwright-tests-job:
     runs-on: ubuntu-latest
     needs: build_and_deploy_job
+    name: Playwright Tests Job
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -63,6 +64,7 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test
+        working-directory: ./frontend
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
