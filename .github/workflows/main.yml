@@ -1,0 +1,40 @@
+name: Manual Playwright Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run tests on'
+        required: true
+        default: 'main'
+      base_url:
+        description: 'Base URL for Playwright tests'
+        required: true
+        default: ''
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the specified branch
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Run Playwright tests with the base URL from input
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          BASE_URL: ${{ github.event.inputs.base_url }}
