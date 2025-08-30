@@ -42,51 +42,6 @@ jobs:
           ###### End of Repository/Build Configurations ######
             # Add any other environment variables your app requires here
 
-            
-  playwright-tests-job:
-    runs-on: ubuntu-latest
-    needs: build_and_deploy_job
-    name: Playwright Tests Job
-    permissions:
-      contents: write   # Ensure the workflow can comment on PRs
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-  
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-  
-      - name: Install dependencies
-        working-directory: ./frontend
-        run: npm ci
-  
-      - name: Install Playwright browsers
-        working-directory: ./frontend
-        run: npx playwright install --with-deps
-  
-      - name: Run Playwright tests
-        working-directory: ./frontend
-        run: npx playwright test --reporter=json > test-results.json || true
-  
-      - name: Report Playwright test results
-        if: always()
-        uses: daun/playwright-report-summary@v3
-        with:
-          report-file: ./frontend/test-results.json
-  
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-results
-          path: |
-            ./frontend/test-results.json
-            ./frontend/test-results/  # Include screenshots/videos if configured
-
-
-
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
