@@ -15,6 +15,7 @@ const publicRoutes = [
   '/terms',
   '/privacy',
   '/contact',
+  '/foo',
 ];
 
 test.describe('Public Routes', () => {
