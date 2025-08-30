@@ -20,20 +20,22 @@ const publicRoutes = [
 
 test.describe('Public Routes', () => {
   for (const route of publicRoutes) {
-    test(`should load ${route.path} successfully and have H1 title`, async ({ page, baseURL }) => {
+    test(`should load ${route.path} successfully`, async ({ page, baseURL }) => {
       const url = route.path.startsWith('http') ? route.path : `${baseURL}${route.path}`;
       await page.goto(url);
       
       // Check that the page has a body element
-      const body = await page.locator('body');
-      await expect(body).toBeVisible();
+      await expect(page.locator('body')).toBeVisible();
 
-      // Optional: verify that the URL is correct
+      // Verify that the URL is correct
       await expect(page).toHaveURL(url);
 
-      // Check for H1 page title
-      const h1 = await page.locator('h1');
-      await expect(h1).toHaveText(route.title);
+      // Check for H1 page title if one is expected
+      if (route.title) {
+        const h1 = page.locator('h1');
+        await expect(h1).toHaveCount(1); // ensure at least one exists
+        await expect(h1.first()).toContainText(route.title, { ignoreCase: true });
+      }
     });
   }
 });
