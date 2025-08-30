@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: ./frontend
-        run: npx playwright test --reporter=json > test-results.json || true
+        run: npx playwright test --reporter=github --reporter=json > test-results.json
         env:
           BASE_URL: ${{ github.event.inputs.base_url }}
 
