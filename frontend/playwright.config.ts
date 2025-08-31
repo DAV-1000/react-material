@@ -25,7 +25,7 @@ export default defineConfig({
   reporter: [
     ['json', { outputFile: 'playwright-report/test-results.json' }],
     ['html', { outputFolder: 'playwright-report/html', open: 'never' }],
-    ['github'], // optional, adds annotations in GitHub Actions
+    ['dot'], 
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
