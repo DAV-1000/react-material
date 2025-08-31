@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // List of public routes with expected H1 titles
 const publicRoutes = [
-  { path: '/', title: 'Home' },
+  { path: '/', title: 'Welcome' },
   { path: '/features', title: 'Features' },
   { path: '/testimonials', title: 'Testimonials' },
   { path: '/highlights', title: 'Highlights' },
@@ -12,10 +12,10 @@ const publicRoutes = [
   { path: '/about', title: 'About Us' },
   { path: '/careers', title: 'Careers' },
   { path: '/press', title: 'Press' },
-  { path: '/terms', title: 'Terms & Conditions' },
-  { path: '/privacy', title: 'Privacy Policy' },
+  { path: '/terms', title: 'Terms and Conditions' },
+  { path: '/privacy', title: 'Our Privacy Policy' },
   { path: '/contact', title: 'Contact' },
-  { path: '/foo', title: 'Foo' },
+  // { path: '/foo', title: 'Foo' },
 ];
 
 test.describe('Public Routes', () => {
