@@ -15,7 +15,7 @@ const publicRoutes = [
   { path: '/terms', title: 'Terms and Conditions' },
   { path: '/privacy', title: 'Our Privacy Policy' },
   { path: '/contact', title: 'Contact' },
-  // { path: '/foo', title: 'Foo' },
+  { path: '/foo', title: 'Foo' },
 ];
 
 test.describe('Public Routes', () => {
