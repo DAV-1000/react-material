@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: ./frontend
-        run: npx playwright test --reporter=json --reporter=html --output=playwright-report
+        run: npx playwright test
         env:
           BASE_URL: ${{ github.event.inputs.base_url }}
 
@@ -46,24 +46,22 @@ jobs:
         uses: daun/playwright-report-summary@v3
         with:
           report-file: ./frontend/playwright-report/test-results.json
-      
+
       - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-html-report
           path: ./frontend/playwright-report/html
-      
+
       - name: Add link to HTML report in Checks summary
         if: always()
         run: |
           echo "## [Playwright HTML Report](https://github.com/${GITHUB_REPOSITORY}/suites/${GITHUB_RUN_ID}/artifacts)" >> $GITHUB_STEP_SUMMARY
-      
-      - name: Upload test results
+
+      - name: Upload raw test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-results
-          path: |
-            ./frontend/playwright-report/test-results.json
-
+          path: ./frontend/playwright-report/test-results.json
