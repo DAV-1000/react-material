@@ -1,6 +1,10 @@
 {
-    "compilerOptions": {
+  "compilerOptions": {
     "esModuleInterop": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["../shared/*"]
+    }
   },
   "files": [],
   "references": [

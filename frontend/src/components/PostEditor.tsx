@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { tempSchema } from "../../../shared/temp.schema";
+import { tempSchema } from "@shared/temp.schema";
 
 import {
   Box,
