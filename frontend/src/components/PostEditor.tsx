@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { tempSchema } from "../../../shared/temp.schema";
+
 import {
   Box,
   Button,
@@ -13,6 +15,7 @@ import {
 import { Add, Delete } from "@mui/icons-material";
 import { Author, BlogPost } from "../types";
 
+const foo = tempSchema.readonly
 export interface PostEditorProps {
   post: BlogPost | null;
   onSave: (value: BlogPost) => void; // event callback
