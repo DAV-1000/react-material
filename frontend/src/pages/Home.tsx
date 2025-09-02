@@ -68,7 +68,7 @@ export default function Home() {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <div>
         <Typography variant="h1" gutterBottom>
-          Welcome
+          Welcome to Our Blog
         </Typography>
         <Typography>Stay in the loop with the latest about our products</Typography>
       </div>
