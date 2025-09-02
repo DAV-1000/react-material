@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 import { Author, BlogPost } from "../types";
-import { entitySchema } from "../../../shared/entity.schema"; // 👈 import zod schema
+import { postSchema } from "../schemas/post.schema"; // 👈 import zod schema
 import { z } from "zod";
 
 export interface PostEditorProps {
@@ -64,7 +64,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
 
   const handleSubmit = () => {
     // ✅ validate with zod
-    const result = entitySchema.safeParse(entity);
+    const result = postSchema.safeParse(entity);
 
     if (!result.success) {
       // Collect errors into a flat object for form display

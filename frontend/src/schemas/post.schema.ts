@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { authorSchema } from "./author.schema";
 
-export const entitySchema = z.object({
+export const postSchema = z.object({
   id: z.string().min(1, "ID is required"),
   img: z
     .string()
@@ -28,4 +28,4 @@ export const entitySchema = z.object({
   authors: z.array(authorSchema).min(1, "At least one author is required"),
 });
 
-export type BlogPost = z.infer<typeof entitySchema>;
+export type BlogPost = z.infer<typeof postSchema>;
