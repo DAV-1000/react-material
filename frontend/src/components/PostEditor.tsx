@@ -12,27 +12,31 @@ import {
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 import { Author, BlogPost } from "../types";
+import { postSchema } from "../schemas/post.schema"; // 👈 import zod schema
+import { z } from "zod";
 
 export interface PostEditorProps {
   post: BlogPost | null;
   onSave: (value: BlogPost) => void; // event callback
-  disabled: boolean
+  disabled: boolean;
 }
 
+type ValidationErrors = Partial<Record<string, string>>;
+
 const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
-  if(!post) {
+  if (!post) {
     return <Typography variant="h6">No post data available.</Typography>;
   }
-  
-  const [entity, setEntity] = useState<BlogPost>(
-    post 
-  );
+
+  const [entity, setEntity] = useState<BlogPost>(post);
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setEntity((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" })); // clear error when typing
   };
 
   const handleAuthorChange = (
@@ -43,6 +47,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     const newAuthors = [...entity.authors];
     newAuthors[index][field] = value;
     setEntity({ ...entity, authors: newAuthors });
+    setErrors((prev) => ({ ...prev, [`authors.${index}.${field}`]: "" }));
   };
 
   const addAuthor = () => {
@@ -58,8 +63,28 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
   };
 
   const handleSubmit = () => {
-    console.log("Upserted Entity:", entity);
-    onSave(entity);
+    // ✅ validate with zod
+    const result = postSchema.safeParse(entity);
+
+    if (!result.success) {
+      // Collect errors into a flat object for form display
+      const fieldErrors: ValidationErrors = {};
+      result.error.issues.forEach((issue) => {
+        const path = issue.path.join(".");
+        fieldErrors[path] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    // If valid
+    console.log("✅ Upserted Entity:", result.data);
+      const validEntity = {
+    ...result.data,
+    tag: (result.data.tag as string[]).join(", ") // convert array back to string
+  };
+
+  onSave(validEntity); // matches BlogPost type
   };
 
   return (
@@ -73,7 +98,9 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
               value={entity.id}
               onChange={handleChange}
               fullWidth
-              disabled={true}
+              disabled
+              error={!!errors.id}
+              helperText={errors.id}
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
@@ -83,6 +110,8 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
               value={entity.img}
               onChange={handleChange}
               fullWidth
+              error={!!errors.img}
+              helperText={errors.img}
             />
           </Grid>
           <Grid size={{ xs: 12 }}>
@@ -92,6 +121,8 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
               value={entity.tag}
               onChange={handleChange}
               fullWidth
+              error={!!errors.tag}
+              helperText={errors.tag}
             />
           </Grid>
           <Grid size={{ xs: 12 }}>
@@ -101,6 +132,8 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
               value={entity.title}
               onChange={handleChange}
               fullWidth
+              error={!!errors.title}
+              helperText={errors.title}
             />
           </Grid>
           <Grid size={{ xs: 12 }}>
@@ -112,15 +145,17 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
               fullWidth
               multiline
               rows={4}
+              error={!!errors.description}
+              helperText={errors.description}
               slotProps={{ htmlInput: { maxLength: 300 } }}
               variant="outlined"
               sx={{
                 "& .MuiInputBase-root": {
-                  alignItems: "flex-start", // allow textarea to expand
-                  height: "100px", // don’t collapse to 40px
+                  alignItems: "flex-start",
+                  height: "100px",
                 },
                 "& textarea": {
-                  minHeight: "100px", // or whatever you prefer
+                  minHeight: "100px",
                 },
               }}
             />
@@ -147,6 +182,8 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
                       handleAuthorChange(index, "name", e.target.value)
                     }
                     fullWidth
+                    error={!!errors[`authors.${index}.name`]}
+                    helperText={errors[`authors.${index}.name`]}
                   />
                 </Grid>
                 <Grid size={{ xs: 5 }}>
@@ -157,6 +194,8 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
                       handleAuthorChange(index, "avatar", e.target.value)
                     }
                     fullWidth
+                    error={!!errors[`authors.${index}.avatar`]}
+                    helperText={errors[`authors.${index}.avatar`]}
                   />
                 </Grid>
                 <Grid>
@@ -177,7 +216,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
                 variant="contained"
                 color="primary"
                 onClick={handleSubmit}
-                disabled= {disabled}
+                disabled={disabled}
               >
                 Save Entity
               </Button>
