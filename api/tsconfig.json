@@ -1,5 +1,5 @@
 {
-"compilerOptions": {
+  "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -9,6 +9,9 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./",
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    }
   },
   "include": ["*.ts", "**/*.ts"]
 }
