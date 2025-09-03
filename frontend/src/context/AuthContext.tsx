@@ -24,7 +24,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(null);
       }
     } catch (error) {
-      console.error("Error fetching user:", error);
       setUser(null);
     } finally {
       setUserLoading(false);

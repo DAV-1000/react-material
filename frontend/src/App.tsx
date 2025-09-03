@@ -43,7 +43,14 @@ export default function App(props: { disableCustomTheme?: boolean }) {
           <Route path="/highlights" element={<Highlights />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route
+            path="/blog"
+            element={
+              <ProtectedRoute>
+                <Blog />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/posts/:id" element={<PostDetail />} />
           <Route
             path="/edit-post/:id"

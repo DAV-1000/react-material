@@ -16,6 +16,7 @@ import Sitemark from "./SitemarkIcon";
 
 import { Link as RouterLink } from "react-router-dom";
 import AuthButtons from "./AuthButtons";
+import BlogButton from "./BlogButton";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -107,16 +108,7 @@ export default function AppAppBar() {
               >
                 FAQ
               </Button>
-              <Button
-                component={RouterLink}
-                to="/blog"
-                variant="text"
-                color="info"
-                size="small"
-                sx={{ minWidth: 0 }}
-              >
-                Blog
-              </Button>
+              <BlogButton/>
             </Box>
           </Box>
           <Box

@@ -90,7 +90,6 @@ export default function PostDetail() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-      <EditPostButton id={post.id} />
       <PostLayout post={post} content={content} />
     </Box>
   );
