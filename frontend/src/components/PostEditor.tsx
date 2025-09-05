@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 import { Author, BlogPost } from "../types";
-import { postSchema } from "../schemas/post.schema"; // 👈 import zod schema
+import { postSchema } from "../../../shared/schemas/post.schema"; // 👈 import zod schema
 import { z } from "zod";
 
 export interface PostEditorProps {
