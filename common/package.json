@@ -20,9 +20,6 @@
   "scripts": {
     "build": "tsc -b"
   },
-  "engines": {
-    "node": "22.x"
-  },
   "dependencies": {
     "zod": "^4.1.5"
   },
