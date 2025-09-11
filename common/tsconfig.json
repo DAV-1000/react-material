@@ -1,5 +1,7 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "declaration": true,
     "declarationMap": true,
     "composite": true,
@@ -8,8 +10,9 @@
     "moduleResolution": "Node",
     "target": "ES2020",
     "esModuleInterop": true,
-    "rootDir": ".",
+    "rootDir": "./src",
     "outDir": "./dist",
-
-  }
+    "noEmit": false
+  },
+  "include": ["src"]
 }

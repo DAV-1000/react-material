@@ -53,9 +53,9 @@ export const BlogPostsGrid: React.FC<Props> = ({
       const tagStr = r.tag ?? "";
       tagStr
         .split(",")
-        .map((t) => t.trim())
+        .map((t: string) => t.trim())
         .filter(Boolean)
-        .forEach((t) => s.add(t));
+        .forEach((t: string) => s.add(t));
     });
     return Array.from(s).sort();
   }, [rows]);
@@ -76,7 +76,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
       const tagStr = r.tag ?? "";
       const parts = tagStr
         .split(",")
-        .map((t) => t.trim())
+        .map((t: string) => t.trim())
         .filter(Boolean);
       return parts.includes(tagFilter);
     });

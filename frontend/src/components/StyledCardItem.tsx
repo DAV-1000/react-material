@@ -1,9 +1,9 @@
 import React from "react";
 import { Typography, CardMedia, CardActionArea } from "@mui/material";
+import Authors from "./Authors.tsx";
 import StyledCard from "./StyledCard.tsx";
 import StyledCardContent from "./StyledCardContent.tsx";
 import StyledTypography from "./StyledTypography.tsx"; // if you have one
-import Author from "./Author.tsx";
 import type { BlogPost } from "../types";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -93,11 +93,11 @@ const StyledCardItem: React.FC<StyledCardItemProps> = ({
               // build array of trimmed, non-empty tags
               const tags = raw
                 .split(",")
-                .map((t) => t.trim())
+                .map((t: string) => t.trim())
                 .filter(Boolean);
 
               // sort case-insensitively but keep original casing for display
-              tags.sort((a, b) =>
+              tags.sort((a: string, b: string) =>
                 a.localeCompare(b, undefined, {
                   sensitivity: "base",
                   numeric: true,
@@ -110,7 +110,7 @@ const StyledCardItem: React.FC<StyledCardItemProps> = ({
               return tags.length === 0 ? (
                 <span>-</span>
               ) : (
-                tags.map((tag, idx) => {
+                tags.map((tag: string, idx: number) => {
                   const isMatch =
                     normalizedSelected !== null &&
                     tag.toLowerCase() === normalizedSelected;
@@ -133,7 +133,7 @@ const StyledCardItem: React.FC<StyledCardItemProps> = ({
             {data.description}
           </StyledTypography>
         </StyledCardContent>
-        <Author authors={data.authors} />
+        <Authors authors={data.authors} />
       </CardActionArea>
     </StyledCard>
   );

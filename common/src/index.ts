@@ -1,3 +1,6 @@
+export { AuthorSchema } from "./schemas/author.schema.js";
+export { PostSchema } from "./schemas/post.schema.js";
+
 export interface Author {
   name: string;
   avatar: string;

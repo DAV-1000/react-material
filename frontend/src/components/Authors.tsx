@@ -1,4 +1,4 @@
-// Author.tsx
+// Authors.tsx
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -8,7 +8,7 @@ export interface AuthorProps {
   authors: Author[];
 }
 
-const Author: React.FC<AuthorProps> = ({ authors }) => {
+const Authors: React.FC<AuthorProps> = ({ authors }) => {
   return (
     <Box
       sx={{
@@ -40,4 +40,4 @@ const Author: React.FC<AuthorProps> = ({ authors }) => {
   );
 };
 
-export default Author;
+export default Authors;

@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 import { Author, BlogPost } from "../types";
-import { postSchema } from "../../../shared/schemas/post.schema"; // 👈 import zod schema
-import { z } from "zod";
+import { PostSchema } from "../schemas";
+import { z, ZodIssue } from "zod";
 
 export interface PostEditorProps {
   post: BlogPost | null;
@@ -35,7 +35,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setEntity((prev) => ({ ...prev, [name]: value }));
+    setEntity((prev: BlogPost) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" })); // clear error when typing
   };
 
@@ -47,7 +47,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     const newAuthors = [...entity.authors];
     newAuthors[index][field] = value;
     setEntity({ ...entity, authors: newAuthors });
-    setErrors((prev) => ({ ...prev, [`authors.${index}.${field}`]: "" }));
+    setErrors((prev) => ({ ...prev, [`authors.${index}.${field.toString()}`]: "" }));
   };
 
   const addAuthor = () => {
@@ -58,18 +58,18 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
   };
 
   const removeAuthor = (index: number) => {
-    const newAuthors = entity.authors.filter((_, i) => i !== index);
+    const newAuthors = entity.authors.filter((_: Author, i: number) => i !== index);
     setEntity({ ...entity, authors: newAuthors });
   };
 
   const handleSubmit = () => {
     // ✅ validate with zod
-    const result = postSchema.safeParse(entity);
+    const result = PostSchema.safeParse(entity);
 
     if (!result.success) {
       // Collect errors into a flat object for form display
       const fieldErrors: ValidationErrors = {};
-      result.error.issues.forEach((issue) => {
+      result.error.issues.forEach((issue: ZodIssue) => {
         const path = issue.path.join(".");
         fieldErrors[path] = issue.message;
       });
@@ -163,7 +163,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
 
           <Grid size={{ xs: 12 }}>
             <Typography variant="h6">Authors</Typography>
-            {entity.authors.map((author, index) => (
+            {entity.authors.map((author: Author, index: number) => (
               <Grid
                 container
                 spacing={2}

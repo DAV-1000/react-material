@@ -1,0 +1,1 @@
+export { AuthorSchema, PostSchema } from "common"

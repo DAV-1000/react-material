@@ -6,7 +6,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import Author from "../components/Author";
+import Authors from "./Authors";
 import { BlogPost } from "../types";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -46,8 +46,7 @@ const PostLayout: React.FC<PostLayoutProps> = ({
 
       {/* Authors */}
       <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
-        <Author authors={data.authors} />
-        {/* Add more authors as needed */}
+        <Authors authors={data.authors} />
       </Box>
 
             <Typography

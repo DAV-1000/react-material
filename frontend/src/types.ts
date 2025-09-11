@@ -1,5 +1,4 @@
-export { Author, BlogPost } from "../../shared"
-
+export { Author, BlogPost } from "common"
 export interface Tag {
   tag: string | null;
   label: string;
