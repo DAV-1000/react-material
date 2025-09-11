@@ -19,7 +19,7 @@
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.2",
     "@mui/x-data-grid": "^8.11.2",
-    "common": "^1.0.0",
+    "common": "workspace:*",
     "dotenv": "^17.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
