@@ -50,6 +50,10 @@ jobs:
           app_location: "frontend/dist"    # prebuilt frontend
           skip_api_build: true
           api_location: "api/dist"         # prebuilt API
+          output_location: ''
+        env:
+          FUNCTIONS_WORKER_RUNTIME: node
+          FUNCTIONS_EXTENSION_VERSION: ~4
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
