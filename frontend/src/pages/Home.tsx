@@ -70,7 +70,7 @@ export default function Home() {
         <Typography variant="h1" gutterBottom>
           Welcome
         </Typography>
-        <Typography>Stay in the loop with the latest about our products</Typography>
+        <Typography>Stay in the loop with the latest about our test products</Typography>
       </div>
       <Box
         sx={{
