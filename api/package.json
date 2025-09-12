@@ -1,5 +1,5 @@
 {
-  "name": "react-material-api",
+  "name": "api",
   "type": "module",
   "version": "1.0.0",
   "description": "",
@@ -8,13 +8,14 @@
     "build": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf dist",
-    "prestart": "npm run clean && npm run build",
-    "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "build:azure": "tsc && npm run prepare-functions && npm run copy-meta",
+    "prepare-functions": "node scripts/prepare-functions.js",
+    "copy-meta": "copyfiles host.json package.json dist/"
   },
   "dependencies": {
     "@azure/cosmos": "^4.5.0",
     "@azure/functions": "^4.0.0",
+    "copyfiles": "^2.4.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
