@@ -12,7 +12,7 @@ const filesToLift = ["auth.js", "types.js"];
 
 // Lift auth.js and types.js from dist/src to dist
 filesToLift.forEach(filename => {
-  const fromPath = path.join(srcRoot, filename);
+  const fromPath = path.join(srcDir, filename);
   const toPath = path.join(outDir, filename);
   if (fs.existsSync(fromPath)) {
     fs.copyFileSync(fromPath, toPath);

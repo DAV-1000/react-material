@@ -1,0 +1,1 @@
+export const cache = new Map<string, { value: any; expiresAt: number }>();

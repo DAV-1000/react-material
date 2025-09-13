@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "clean": "rimraf dist",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run clean && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "playwright test --project=Chromium"

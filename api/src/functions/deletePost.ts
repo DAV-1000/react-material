@@ -1,6 +1,6 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { cache } from "./getPosts.js"; // reuse the cache
+import { cache } from "../cache.js"; // reuse the cache
 import { CosmosClient } from "@azure/cosmos";
 import { getClientPrincipal, requireRole } from "../auth.js";
 

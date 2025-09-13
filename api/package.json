@@ -3,17 +3,16 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/functions/*.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc --outDir ./dist",
     "watch": "tsc -w",
     "clean": "rimraf dist",
-    "build:azure": "tsc && npm run prepare-functions && npm run copy-meta",
+    "build:azure": "npm run clean &&  tsc && npm run prepare-functions && npm run copy-meta",
     "prepare-functions": "node scripts/prepare-functions.js",
     "copy-meta": "copyfiles host.json package.json dist/"
   },
   "dependencies": {
-    "@azure/cosmos": "^4.5.0",
+    "@azure/cosmos": "^4.5.1",
     "@azure/functions": "^4.0.0",
     "copyfiles": "^2.4.1",
     "uuid": "^11.1.0"

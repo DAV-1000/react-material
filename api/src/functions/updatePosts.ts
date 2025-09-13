@@ -7,8 +7,7 @@ import {
 } from "@azure/functions";
 import { getClientPrincipal, requireRole } from "../auth.js";
 
-// reuse the same cache map defined in GET
-import { cache } from "./getPosts.js";
+import { cache } from "../cache.js"; // reuse the cache
 
 export async function updatePost(
   request: HttpRequest,

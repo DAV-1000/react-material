@@ -1,6 +1,6 @@
 import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import { cache } from "./getPosts.js"; // reuse the cache
+import { cache } from "../cache.js"; // reuse the cache
 import { v4 as uuidv4 } from "uuid"; // npm install uuid
 import { getClientPrincipal, requireRole } from "../auth.js";
 
