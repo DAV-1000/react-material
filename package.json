@@ -5,7 +5,8 @@
     "prestart": "npm run build:all",
     "start": "swa start",
     "start:all": "concurrently \"npm run start --prefix api\" \"npm run dev --prefix frontend\"",
-    "build:all": "concurrently \"npm run build --prefix api\" \"npm run build --prefix frontend\""
+    "build:all": "concurrently \"npm run build --prefix api\" \"npm run build --prefix frontend\"",
+    "build:azure": "concurrently \"npm run build:azure --prefix api\" \"npm run build:azure --prefix frontend\""
   },
   "devDependencies": {
     "@azure/static-web-apps-cli": "^2.0.6",

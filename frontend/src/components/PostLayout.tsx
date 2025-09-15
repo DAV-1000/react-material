@@ -1,11 +1,9 @@
-import {
-  Box,
-  Card,
-  CardMedia,
-  Container,
-  Grid,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import Author from "../components/Author";
 import { BlogPost } from "../types";
 import ReactMarkdown from "react-markdown";

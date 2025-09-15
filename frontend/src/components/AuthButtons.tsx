@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@mui/material"; // or your UI lib
+import Button from "@mui/material/Button"; // or your UI lib
 import { useAuth } from "../context/AuthContext";
 
 const AuthButtons: React.FC = () => {

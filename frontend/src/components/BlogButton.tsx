@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link as RouterLink } from "react-router-dom";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 
 const BlogButton: React.FC = () => {
   const { user, userLoading } = useAuth();

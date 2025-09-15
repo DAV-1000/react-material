@@ -1,7 +1,10 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import BlogPostsGrid from '../components/BlogPostsGrid';
+import { Suspense, lazy } from 'react';
+
+const BlogPostsGrid = lazy(() => import('../components/BlogPostsGrid'));
+
 import { useBlogPostService } from '../services/BlogPostServiceContext';
 import { BlogPost } from '../types';
 import { useEffect, useState, useCallback } from 'react';

@@ -11,18 +11,18 @@ import {
   GridPaginationModel,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import {
-  Box,
-  Avatar,
-  Chip,
-  Stack,
-  Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Container,
-} from "@mui/material";
+
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Container from "@mui/material/Container";
+
 import type { BlogPost, Author } from "../types";
 import EditPostButton from "./EditPostButton";
 import DeletePostButton from "./DeletePostButton";

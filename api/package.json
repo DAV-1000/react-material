@@ -6,6 +6,7 @@
   "main": "dist/functions/*.js",
   "scripts": {
     "build": "npm run clean && tsc",
+    "build:azure": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf dist",
     "prestart": "npm run build",
