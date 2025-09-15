@@ -5,7 +5,10 @@ import { BlogPost } from "../types";
 import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
-import { Button, Snackbar, Alert } from "@mui/material";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
 import { useSnackbar } from "../hooks/useSnackbar";
 export default function EditPost() {
   // eslint-disable-next-line react-x/no-use-context

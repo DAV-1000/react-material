@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import { useAuth } from "../context/AuthContext";
 import { Link as RouterLink } from "react-router-dom";

@@ -1,11 +1,10 @@
 // eslint-disable-next-line react-x/no-use-context
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
-import {
-  Typography,
-  Box,
-  Button,
-} from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+
 import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
 import type { BlogPost } from "../types";
 import PostLayout from "../components/PostLayout";

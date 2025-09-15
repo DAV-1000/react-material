@@ -1,5 +1,6 @@
 import { useState, ReactNode, useCallback } from "react";
-import { Snackbar, Alert } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 type Severity = "success" | "error" | "info" | "warning";
 

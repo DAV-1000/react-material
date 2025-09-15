@@ -1,5 +1,7 @@
 import React from "react";
-import { Typography, CardMedia, CardActionArea } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import CardMedia from "@mui/material/CardMedia";
+import CardActionArea from "@mui/material/CardActionArea";
 import StyledCard from "./StyledCard.tsx";
 import StyledCardContent from "./StyledCardContent.tsx";
 import StyledTypography from "./StyledTypography.tsx"; // if you have one

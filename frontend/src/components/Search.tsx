@@ -1,11 +1,10 @@
 import React, { useRef, useState } from "react";
-import {
-  Box,
-  FormControl,
-  OutlinedInput,
-  IconButton,
-  SxProps,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import IconButton from "@mui/material/IconButton";
+import type { SxProps } from "@mui/material"; // type-only import
+
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 export interface SearchProps {

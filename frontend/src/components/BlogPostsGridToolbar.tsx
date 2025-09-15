@@ -15,7 +15,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import AddIcon from "@mui/icons-material/Add";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useGridApiContext } from "@mui/x-data-grid";
-import { Badge } from "@mui/material";
+import Badge from "@mui/material/Badge";
 
 import { GridToolbarProps } from '@mui/x-data-grid';
 import AddPostButton from "./AddPostButton";
