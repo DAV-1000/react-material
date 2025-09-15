@@ -8,7 +8,7 @@
     "build": "npm run clean && tsc",
     "watch": "tsc -w",
     "clean": "rimraf dist",
-    "build:azure": "npm run clean &&  tsc && npm run prepare-functions && npm run copy-meta",
+    "build:azure": "cd ../ && npm run build:all",
     "prepare-functions": "node scripts/prepare-functions.js",
     "copy-meta": "copyfiles host.json package.json dist/"
   },
