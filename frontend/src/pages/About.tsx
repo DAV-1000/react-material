@@ -12,7 +12,7 @@ export default function About() {
         <Typography variant="h1" gutterBottom>
           About Us
         </Typography>
-        <Typography>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</Typography>
+        <Typography>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit... tolos</Typography>
       </div>
 
     </Box>
