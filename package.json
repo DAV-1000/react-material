@@ -7,7 +7,7 @@
     "clean": "rimraf dist",
     "prestart": "npm run clean && npm run build:all",
     "start": "swa start",
-    "build:all": "npm run build --prefix common && concurrently \"npm run build:azure --prefix api\" \"npm run build --prefix frontend\"",
+    "build:all": "npm run build --prefix common && concurrently \"npm run build --prefix api\" \"npm run build --prefix frontend\"",
     "build:azure": "npm run build --prefix common && concurrently \"npm run build:azure --prefix api\" \"npm run build --prefix frontend\""
   },
   "devDependencies": {

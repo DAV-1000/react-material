@@ -3,8 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
+  "main": "dist/functions/*.js",
   "scripts": {
-    "build": "npm run clean && tsc --outDir ./dist",
+    "build": "npm run clean && tsc",
     "watch": "tsc -w",
     "clean": "rimraf dist",
     "build:azure": "npm run clean &&  tsc && npm run prepare-functions && npm run copy-meta",
