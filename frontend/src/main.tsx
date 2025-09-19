@@ -3,16 +3,19 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import { StyledEngineProvider } from '@mui/styled-engine'; 
-import { BlogPostServiceProvider } from "./services/BlogPostServiceContext.tsx";
+import { PostCommandServiceProvider } from "./services/PostCommandServiceContext.tsx";
+import { PostQueryServiceProvider } from "./services/PostQueryServiceContext.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <StyledEngineProvider injectFirst>
         <AuthProvider>
-        <BlogPostServiceProvider>
+          <PostQueryServiceProvider>
+        <PostCommandServiceProvider>
         <App />
-        </BlogPostServiceProvider>
+        </PostCommandServiceProvider>
+        </PostQueryServiceProvider>
         </AuthProvider>
       </StyledEngineProvider>
     </BrowserRouter>

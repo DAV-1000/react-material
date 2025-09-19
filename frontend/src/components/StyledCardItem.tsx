@@ -6,11 +6,11 @@ import StyledCard from "./StyledCard.tsx";
 import StyledCardContent from "./StyledCardContent.tsx";
 import StyledTypography from "./StyledTypography.tsx"; // if you have one
 import Author from "./Author.tsx";
-import type { BlogPost } from "../types";
+import type { Post } from "../types";
 import { Link as RouterLink } from "react-router-dom";
 
 interface StyledCardItemProps {
-  data?: BlogPost;
+  data?: Post;
   index: number;
   focusedIndex: number | null;
   onFocus: (index: number) => void;

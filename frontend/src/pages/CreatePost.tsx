@@ -1,18 +1,16 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PostEditor from "../components/PostEditor";
-import { BlogPost } from "../types";
-import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
-import { useContext, useEffect, useState } from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
+import { PostCommandServiceContext } from "../services/PostCommandServiceContext";
+import { useContext, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 import { useSnackbar } from "../hooks/useSnackbar";
+import { newPost, PostCommand } from "../schemas/post.schema";
 
 export default function EditPost() {
   // eslint-disable-next-line react-x/no-use-context
-  const blogPostService = useContext(BlogPostServiceContext);
+  const blogPostService = useContext(PostCommandServiceContext);
   const [loading, setLoading] = useState(false);
 
   if (!blogPostService) {
@@ -27,14 +25,7 @@ export default function EditPost() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const post: BlogPost =   {
-    "id": "",
-    "img": "",
-    "tag": "",
-    "title": "",
-    "description":"",
-    "authors": []
-  };
+  const post: PostCommand =   newPost();
 
   if (error) {
     return (
@@ -51,7 +42,7 @@ export default function EditPost() {
     return null; // Or a fallback UI
   }
 
-  const handleSave = async (value: BlogPost) => {
+  const handleSave = async (value: PostCommand) => {
     setLoading(true);
     try {
       await blogPostService.create(value);

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { authorSchema } from "./author.schema";
 
 export const postSchema = z.object({
-  id: z.string().min(1, "ID is required"),
+  id: z.string().min(1, "ID cannot be empty"),
   img: z
     .string()
     .min(1, "Image is required")
@@ -28,4 +28,15 @@ export const postSchema = z.object({
   authors: z.array(authorSchema).min(1, "At least one author is required"),
 });
 
-export type BlogPost = z.infer<typeof postSchema>;
+export type PostCommand = z.infer<typeof postSchema>;
+
+export function newPost(): PostCommand {
+  return {
+    id: "",
+    img: "",
+    tag: [],
+    title: "",
+    description: "",
+    authors: [],
+  };
+}

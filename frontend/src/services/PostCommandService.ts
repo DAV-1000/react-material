@@ -1,38 +1,26 @@
-import { BlogPost } from "../types";
+import { PostCommand } from "../schemas/post.schema";
 const ARTICLE_URL = import.meta.env.VITE_BLOG_ARTICLE_URL;
 
-export interface BlogPostService {
-  // get: () => Promise<BlogPost[]>;
-  // getById: (id: string) => Promise<BlogPost>;
-    /** Get all blog posts */
-  get: () => Promise<BlogPost[]>;
+export interface PostCommandService {
 
   /** Get a single blog post by id */
-  getById: (id: string) => Promise<BlogPost>;
+  getById: (id: string) => Promise<PostCommand>;
 
   /** Create a new blog post */
-  create: (post: Omit<BlogPost, "id" | "createdAt">) => Promise<BlogPost>;
+  create: (post: Omit<PostCommand, "id" | "createdAt">) => Promise<PostCommand>;
 
   /** Update an existing blog post */
-  update: (id: string, post: Partial<Omit<BlogPost, "id" | "createdAt">>) => Promise<BlogPost>;
+  update: (id: string, post: Partial<Omit<PostCommand, "id" | "createdAt">>) => Promise<PostCommand>;
 
   /** Delete a blog post by id */
   delete: (id: string) => Promise<void>;
   getContent: (postId: string | null) => Promise<string>;
 }
 
-export const blogPostService: BlogPostService = {
-  get: async () => {
-    const response = await fetch('/api/posts');
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch posts');
-    }
-    return await response.json();
-  },
+export const postCommandService: PostCommandService = {
 
  async getById(id: string) {
-    const res = await fetch(`/api/posts/${id}`);
+    const res = await fetch(`/api/posts/${id}/edit`);
     if (!res.ok) {
       throw new Error(`Failed to fetch post ${id}: ${res.statusText}`);
     }

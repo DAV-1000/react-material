@@ -1,7 +1,7 @@
 import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-export async function getPostById(request: HttpRequest, context: InvocationContext): 
+export async function getPostByIdDetail(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
     const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
     if (!cosmosConnectionString) {
@@ -34,9 +34,9 @@ Promise<HttpResponseInit> {
     }
 };
 
-app.http('getPostById', {
+app.http('getPostByIdDetail', {
     methods: ['GET'],
-    route: 'posts/{id}',
+    route: 'posts/{id}/detail',
     authLevel: 'anonymous',
-    handler: getPostById
+    handler: getPostByIdDetail
 });
