@@ -14,7 +14,6 @@ export async function updatePost(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  
   const principal = getClientPrincipal(request);
 
   // Enforce editor role
@@ -51,8 +50,17 @@ export async function updatePost(
       return { status: 404, body: "Post not found" };
     }
 
+    const tags = (body.tags || [])
+      .slice()
+      .sort((a: string, b: string) => a.localeCompare(b));
+
     // Merge updates into existing post
-    const updated = { ...existing, ...body };
+    const updated = {
+      ...existing,
+      ...body,
+      tag: tags.join(", "),
+      tags: tags,
+    };
 
     // Replace in Cosmos
     const { resource } = await container.item(id, id).replace(updated);

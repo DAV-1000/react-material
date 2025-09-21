@@ -7,16 +7,9 @@ export const postSchema = z.object({
     .string()
     .min(1, "Image is required")
     .regex(/\.(jpg|jpeg|png|gif|webp)$/i, "Must be a valid image file"),
-  tag: z
-    .string()
-    .min(1, "Tag cannot be empty")
-    .transform((val) =>
-      val.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
-    )
-    .refine(
-      (tags) => tags.length > 0,
-      "Must contain at least one valid tag"
-    ),
+  tags: z
+    .array(z.string().min(1, "Tag cannot be empty"))
+    .nonempty("Must contain at least one valid tag"),
   title: z
     .string()
     .min(1, "Title cannot be null")
@@ -32,9 +25,9 @@ export type PostCommand = z.infer<typeof postSchema>;
 
 export function newPost(): PostCommand {
   return {
-    id: "",
+    id: "NEW_POST",
     img: "",
-    tag: [],
+    tags: [],
     title: "",
     description: "",
     authors: [],

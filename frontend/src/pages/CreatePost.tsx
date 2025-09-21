@@ -8,24 +8,21 @@ import Button from "@mui/material/Button";
 import { useSnackbar } from "../hooks/useSnackbar";
 import { newPost, PostCommand } from "../schemas/post.schema";
 
+import { useNavigate } from "react-router-dom";
+
 export default function EditPost() {
   // eslint-disable-next-line react-x/no-use-context
   const blogPostService = useContext(PostCommandServiceContext);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   if (!blogPostService) {
     throw new Error("BlogPostServiceContext is not provided");
   }
   const { showSnackbar, SnackbarComponent } = useSnackbar();
 
-  const [status, setStatus] = useState<{
-    message: string;
-    severity: "success" | "error";
-  } | null>(null);
-
   const [error, setError] = useState<string | null>(null);
-
-  const post: PostCommand =   newPost();
+  const post: PostCommand = newPost();
 
   if (error) {
     return (
@@ -45,16 +42,16 @@ export default function EditPost() {
   const handleSave = async (value: PostCommand) => {
     setLoading(true);
     try {
-      await blogPostService.create(value);
-      showSnackbar("Post created successfully!", "success");
+      const createdPost = await blogPostService.create(value);
+      showSnackbar("Post created successfully!", "success", () => {
+        navigate(`/edit-post/${createdPost.id}`);
+      });
     } catch (err: any) {
       showSnackbar(`Failed to save post: ${err.message}`, "error");
     } finally {
       setLoading(false);
     }
   };
-
-  const handleClose = () => setStatus(null);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>

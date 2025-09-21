@@ -7,13 +7,12 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper"
+import Paper from "@mui/material/Paper";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
 
 import { Author } from "../types";
 import { postSchema, PostCommand } from "../schemas/post.schema"; // 👈 import zod schema
-
 
 export interface PostEditorProps {
   post: PostCommand | null;
@@ -62,6 +61,21 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     setEntity({ ...entity, authors: newAuthors });
   };
 
+  const [tagsInput, setTagsInput] = useState(post.tags?.join(", ") || "");
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTagsInput(value);
+
+    setEntity((prev) => ({
+      ...prev,
+      tags: value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+    }));
+  };
+
   const handleSubmit = () => {
     // ✅ validate with zod
     const validatedPost = postSchema.safeParse(entity);
@@ -79,11 +93,11 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
 
     // If valid
     console.log("✅ Upserted Entity:", validatedPost.data);
-      const validPost = {
-    ...validatedPost.data
-  };
+    const validPost = {
+      ...validatedPost.data,
+    };
 
-  onSave(validPost); // matches BlogPost type
+    onSave(validPost); // matches BlogPost type
   };
 
   return (
@@ -116,9 +130,9 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
           <Grid size={{ xs: 12 }}>
             <TextField
               label="Tags"
-              name="tag"
-              value={entity.tag}
-              onChange={handleChange}
+              name="tags"
+              value={tagsInput}
+              onChange={handleTagsChange}
               fullWidth
               error={!!errors.tag}
               helperText={errors.tag}

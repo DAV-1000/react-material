@@ -7,7 +7,8 @@ import { getClientPrincipal, requireRole } from "../auth.js";
 export async function createPost(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
       const principal = getClientPrincipal(request);
-    
+
+
       // Enforce editor role
       const authResponse = requireRole(principal, ["editor"]);
       if (authResponse) return authResponse;
@@ -27,14 +28,19 @@ Promise<HttpResponseInit> {
     }
 
     try {
-        // Ensure an id exists (Cosmos requires it)
+
+    const tags = (body.tags || [])
+      .slice()
+      .sort((a: string, b: string) => a.localeCompare(b));
+
         const newPost = {
-            id: uuidv4(),
+            ...body, // allow extra fields if you want
+            id: uuidv4(), // Override the id with a new UUID
             title: body.title,
             content: body.content,
-            tags: body.tags || [],
-            createdAt: new Date().toISOString(),
-            ...body // allow extra fields if you want
+            tags: tags,
+            tag: tags.join(", "), // denormalized for query
+            createdAt: new Date().toISOString()
         };
 
         const { resource } = await container.items.create(newPost);
