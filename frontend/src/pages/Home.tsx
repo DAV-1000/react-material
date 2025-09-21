@@ -5,11 +5,10 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 import StyledCardItem from '../components/StyledCardItem';
-import { useBlogPostService } from '../services/BlogPostServiceContext';
-import { BlogPost } from '../types';
+import { usePostQueryService } from '../services/PostQueryServiceContext';
 import { useEffect, useState } from 'react';
 import TagChips from '../components/TagChips';
-import type { Tag } from '../types';
+import type { PostQuery, Tag } from '../types';
 import Search from '../components/Search';
 
   const tags : Tag[] = [
@@ -22,8 +21,8 @@ import Search from '../components/Search';
 
 export default function Home() {
   
-  const svc = useBlogPostService();
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const svc = usePostQueryService();
+  const [posts, setPosts] = useState<PostQuery[]>([]);
   const [searchTerm, setSearchTerm] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);

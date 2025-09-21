@@ -7,17 +7,16 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper"
+import Paper from "@mui/material/Paper";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
 
-import { Author, BlogPost } from "../types";
-import { postSchema } from "../schemas/post.schema"; // 👈 import zod schema
-import { z } from "zod";
+import { Author } from "../types";
+import { postSchema, PostCommand } from "../schemas/post.schema"; // 👈 import zod schema
 
 export interface PostEditorProps {
-  post: BlogPost | null;
-  onSave: (value: BlogPost) => void; // event callback
+  post: PostCommand | null;
+  onSave: (value: PostCommand) => void; // event callback
   disabled: boolean;
 }
 
@@ -28,7 +27,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     return <Typography variant="h6">No post data available.</Typography>;
   }
 
-  const [entity, setEntity] = useState<BlogPost>(post);
+  const [entity, setEntity] = useState<PostCommand>(post);
   const [errors, setErrors] = useState<ValidationErrors>({});
 
   const handleChange = (
@@ -62,14 +61,29 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     setEntity({ ...entity, authors: newAuthors });
   };
 
+  const [tagsInput, setTagsInput] = useState(post.tags?.join(", ") || "");
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTagsInput(value);
+
+    setEntity((prev) => ({
+      ...prev,
+      tags: value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+    }));
+  };
+
   const handleSubmit = () => {
     // ✅ validate with zod
-    const result = postSchema.safeParse(entity);
+    const validatedPost = postSchema.safeParse(entity);
 
-    if (!result.success) {
+    if (!validatedPost.success) {
       // Collect errors into a flat object for form display
       const fieldErrors: ValidationErrors = {};
-      result.error.issues.forEach((issue) => {
+      validatedPost.error.issues.forEach((issue) => {
         const path = issue.path.join(".");
         fieldErrors[path] = issue.message;
       });
@@ -78,13 +92,12 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     }
 
     // If valid
-    console.log("✅ Upserted Entity:", result.data);
-      const validEntity = {
-    ...result.data,
-    tag: (result.data.tag as string[]).join(", ") // convert array back to string
-  };
+    console.log("✅ Upserted Entity:", validatedPost.data);
+    const validPost = {
+      ...validatedPost.data,
+    };
 
-  onSave(validEntity); // matches BlogPost type
+    onSave(validPost); // matches BlogPost type
   };
 
   return (
@@ -117,9 +130,9 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
           <Grid size={{ xs: 12 }}>
             <TextField
               label="Tags"
-              name="tag"
-              value={entity.tag}
-              onChange={handleChange}
+              name="tags"
+              value={tagsInput}
+              onChange={handleTagsChange}
               fullWidth
               error={!!errors.tag}
               helperText={errors.tag}

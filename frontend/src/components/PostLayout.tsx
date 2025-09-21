@@ -5,12 +5,12 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Author from "../components/Author";
-import { BlogPost } from "../types";
+import { Post } from "../types";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 interface PostLayoutProps {
-  post?: BlogPost;
+  post?: Post;
   content?: string;
 }
 

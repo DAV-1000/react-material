@@ -1,24 +1,22 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PostEditor from "../components/PostEditor";
-import { BlogPost } from "../types";
-import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
+import { PostCommandServiceContext } from "../services/PostCommandServiceContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 
 import { useSnackbar } from "../hooks/useSnackbar";
+import { PostCommand } from "../schemas/post.schema";
 export default function EditPost() {
   // eslint-disable-next-line react-x/no-use-context
-  const blogPostService = useContext(BlogPostServiceContext);
+  const postCommandService = useContext(PostCommandServiceContext);
 
-  if (!blogPostService) {
+  if (!postCommandService) {
     throw new Error("BlogPostServiceContext is not provided");
   }
   const { showSnackbar, SnackbarComponent } = useSnackbar();
-  const [post, setPost] = useState<BlogPost | null>(null);
+  const [post, setPost] = useState<PostCommand | null>(null);
   const [status, setStatus] = useState<{
     message: string;
     severity: "success" | "error";
@@ -36,7 +34,7 @@ export default function EditPost() {
 
     setLoading(true);
 
-    blogPostService!
+    postCommandService!
       .getById(id)
       .then((data) => {
         setPost(data);
@@ -49,7 +47,7 @@ export default function EditPost() {
         setError("Error retrieving post.");
         setLoading(false);
       });
-  }, [id, blogPostService]);
+  }, [id, postCommandService]);
 
   if (error) {
     return (
@@ -66,10 +64,10 @@ export default function EditPost() {
     return null; // Or a fallback UI
   }
 
-  const handleSave = async (value: BlogPost) => {
+  const handleSave = async (value: PostCommand) => {
     setLoading(true);
     try {
-      await blogPostService.update(value.id, value);
+      await postCommandService.update(value.id, value);
       showSnackbar("Post saved successfully!", "success");
     } catch (err: any) {
       showSnackbar(`Failed to save post: ${err.message}`, "error");

@@ -5,13 +5,13 @@ import { Suspense, lazy } from 'react';
 
 const BlogPostsGrid = lazy(() => import('../components/BlogPostsGrid'));
 
-import { useBlogPostService } from '../services/BlogPostServiceContext';
-import { BlogPost } from '../types';
+import { usePostQueryService } from '../services/PostQueryServiceContext';
+import { Post } from '../types';
 import { useEffect, useState, useCallback } from 'react';
 
 export default function Blog() {
-  const svc = useBlogPostService();
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const svc = usePostQueryService();
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

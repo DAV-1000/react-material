@@ -3,7 +3,16 @@ export interface Author {
   avatar: string;
 }
 
-export interface BlogPost {
+export interface Post {
+  id: string; // Changed to string to match JSON data
+  img: string;
+  tag: string;
+  title: string;
+  description: string;
+  authors: Author[];
+}
+
+export interface PostQuery {
   id: string; // Changed to string to match JSON data
   img: string;
   tag: string;
@@ -24,3 +33,4 @@ export interface User {
   userRoles: string[];
   claims: { typ: string; val: string }[];
 }
+

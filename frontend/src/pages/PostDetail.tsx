@@ -5,16 +5,15 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
-import type { BlogPost } from "../types";
+import { PostQueryServiceContext } from "../services/PostQueryServiceContext";
+import type { PostQuery } from "../types";
 import PostLayout from "../components/PostLayout";
-import EditPostButton from "../components/EditPostButton";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
   // eslint-disable-next-line react-x/no-use-context
-  const blogPostService = useContext(BlogPostServiceContext);
-  const [post, setPost] = useState<BlogPost | null>(null);
+  const blogPostService = useContext(PostQueryServiceContext);
+  const [post, setPost] = useState<PostQuery | null>(null);
   const [content, setContent] = useState<string>("");
   const [loadingContent, setLoadingContent] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);

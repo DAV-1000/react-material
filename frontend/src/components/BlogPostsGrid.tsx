@@ -23,14 +23,14 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Container from "@mui/material/Container";
 
-import type { BlogPost, Author } from "../types";
+import type { Post, Author } from "../types";
 import EditPostButton from "./EditPostButton";
 import DeletePostButton from "./DeletePostButton";
 
 const defaultPageSizeOptions = [5, 10, 25]; // Default page size options
 
 type Props = {
-  rows: BlogPost[];
+  rows: Post[];
   initialPageSize?: number;
   pageSizeOptions?: number[];
   refreshPosts?: () => void; // TODO implement server side paging etc.
@@ -94,7 +94,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
       disableColumnMenu: true, // hide the column menu
       hideable: false, // hide from column chooser / column panel
       headerName: "",
-      renderCell: (params: GridRenderCellParams<BlogPost, string>) => {
+      renderCell: (params: GridRenderCellParams<Post, string>) => {
         return (
           <Stack
             direction="row"
@@ -111,7 +111,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
       field: "title",
       headerName: "Title",
       flex: 1,
-      renderCell: (params: GridRenderCellParams<BlogPost, string>) => {
+      renderCell: (params: GridRenderCellParams<Post, string>) => {
         // stopPropagation prevents DataGrid row click/selection from also being triggered
         const handleClick = (event: React.MouseEvent) => {
           event.stopPropagation();
@@ -137,7 +137,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
       sortable: true,
       filterable: true,
       renderCell: (
-        params: GridRenderCellParams<BlogPost, string | undefined>
+        params: GridRenderCellParams<Post, string | undefined>
       ) => {
         const tagString = params.value ?? "";
         const tagList = tagString
@@ -165,7 +165,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
       sortable: false,
       filterable: false,
       renderCell: (
-        params: GridRenderCellParams<BlogPost, string | undefined>
+        params: GridRenderCellParams<Post, string | undefined>
       ) => (
         <Box
           sx={{
@@ -195,7 +195,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
       sortable: false,
       filterable: false,
       renderCell: (
-        params: GridRenderCellParams<BlogPost, string | undefined>
+        params: GridRenderCellParams<Post, string | undefined>
       ) => {
         // Force authors to always be an array
         const authors: Author[] =
@@ -257,7 +257,7 @@ export const BlogPostsGrid: React.FC<Props> = ({
 
       {/* DataGrid with the built-in toolbar & quick filter (showToolbar) */}
       <Box sx={{ height: 650, width: "100%" }}>
-        <DataGrid<BlogPost>
+        <DataGrid<Post>
           rows={filteredRows}
           sx={{
             borderColor: isLight
