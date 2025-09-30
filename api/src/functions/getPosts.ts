@@ -8,10 +8,9 @@ export const cache = new Map<string, { value: any; expiresAt: number }>();
 export async function posts(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
 
-const env = process.env.ENVIRONMENT; // || "local";
-
 // Load the correct .env file
-dotenv.config({ path: `.env.${env}` });
+dotenv.config({ path: `.env` });
+dotenv.config({ path: `.env.${process.env.ENVIRONMENT}` });
 
 context.log(`Environment URL: ${process.env.API_BASE_URL}`);
 

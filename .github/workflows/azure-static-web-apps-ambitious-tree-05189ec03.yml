@@ -27,8 +27,8 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # - name: Print event name
-      #   run: echo "Event: ${{ github.event_name }}"
+      - name: Print event name
+        run: "echo Working Directory: $(System.DefaultWorkingDirectory)"
 
       - name: Run only on PRs
         if: ${{ github.event_name == 'pull_request' }}
