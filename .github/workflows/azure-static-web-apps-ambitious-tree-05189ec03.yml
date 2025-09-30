@@ -28,7 +28,8 @@ jobs:
           cache: 'npm'
 
       - name: DefaultWorkingDirectory
-        run: echo $(System.DefaultWorkingDirectory)
+        run: |
+          echo "Workspace: $GITHUB_WORKSPACE"
 
       - name: Run only on PRs
         if: ${{ github.event_name == 'pull_request' }}
