@@ -26,7 +26,17 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+      - name: Print event name
+        run: echo "Event: ${{ github.event_name }}"
 
+      - name: Run only on PRs
+        if: ${{ github.event_name == 'pull_request' }}
+        run: echo "This is a PR build"
+
+      - name: Run only on merges to main
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: echo "This is a main build"
+        
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

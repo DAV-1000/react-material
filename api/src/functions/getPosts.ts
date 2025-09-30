@@ -1,11 +1,20 @@
 import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import * as dotenv from "dotenv";
 
 
 export const cache = new Map<string, { value: any; expiresAt: number }>();
 
 export async function posts(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
+
+const env = process.env.ENVIRONMENT; // || "local";
+
+// Load the correct .env file
+dotenv.config({ path: `.env.${env}` });
+
+context.log(`Environment URL: ${process.env.API_BASE_URL}`);
+
     const key = "myData";
     const ttlMs = 5 * 60 * 1000; // cache for 5 minutes
 
