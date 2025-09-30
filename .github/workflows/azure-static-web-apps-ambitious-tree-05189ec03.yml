@@ -33,11 +33,11 @@ jobs:
 
       - name: Run only on PRs
         if: ${{ github.event_name == 'pull_request' }}
-        run: echo "This is a PR build"
+        run: echo "ENVIRONMENT=staging" > $GITHUB_WORKSPACE/api/.env
 
       - name: Run only on merges to main
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run: echo "This is a main build"
+        run: echo "ENVIRONMENT=production" > $GITHUB_WORKSPACE/api/.env
 
       - name: Build And Deploy
         id: builddeploy
