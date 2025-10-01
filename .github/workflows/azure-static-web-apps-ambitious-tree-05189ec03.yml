@@ -27,6 +27,18 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: DefaultWorkingDirectory
+        run: |
+          echo "Workspace: $GITHUB_WORKSPACE"
+
+      - name: Run only on PRs
+        if: ${{ github.event_name == 'pull_request' }}
+        run: echo "APP_ENV=staging" > $GITHUB_WORKSPACE/api/.env
+
+      - name: Run only on merges to main
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: echo "APP_ENV=production" > $GITHUB_WORKSPACE/api/.env
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
