@@ -1,11 +1,15 @@
 import { CosmosClient } from "@azure/cosmos";
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { COSMOS_DB_CONNECTION_STRING, APP_ENV } from "../config.js";
 
 
 export const cache = new Map<string, { value: any; expiresAt: number }>();
 
 export async function posts(request: HttpRequest, context: InvocationContext): 
 Promise<HttpResponseInit> {
+
+    context.log(`Environment=${APP_ENV}`);
+
     const key = "myData";
     const ttlMs = 5 * 60 * 1000; // cache for 5 minutes
 
@@ -19,7 +23,7 @@ Promise<HttpResponseInit> {
         };
     }
 
-    const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
+    const cosmosConnectionString = COSMOS_DB_CONNECTION_STRING;
 
     if (!cosmosConnectionString) {
         throw new Error("COSMOS_DB_CONNECTION_STRING not set");
