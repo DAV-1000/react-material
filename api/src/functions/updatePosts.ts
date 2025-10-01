@@ -9,6 +9,7 @@ import { getClientPrincipal, requireRole } from "../auth.js";
 
 // reuse the same cache map defined in GET
 import { cache } from "./getPosts.js";
+import { COSMOS_DB_CONNECTION_STRING } from "../config.js";
 
 export async function updatePost(
   request: HttpRequest,
@@ -20,12 +21,10 @@ export async function updatePost(
   const authResponse = requireRole(principal, ["editor"]);
   if (authResponse) return authResponse;
 
-  const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
-  if (!cosmosConnectionString) {
+  if (!COSMOS_DB_CONNECTION_STRING) {
     throw new Error("COSMOS_DB_CONNECTION_STRING not set");
   }
-
-  const client = new CosmosClient(cosmosConnectionString);
+  const client = new CosmosClient(COSMOS_DB_CONNECTION_STRING);
   const database = client.database("cosmicworks");
   const container = database.container("posts");
 
