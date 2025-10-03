@@ -12,12 +12,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function EditPost() {
   // eslint-disable-next-line react-x/no-use-context
-  const blogPostService = useContext(PostCommandServiceContext);
+  const postCommandService = useContext(PostCommandServiceContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  if (!blogPostService) {
-    throw new Error("BlogPostServiceContext is not provided");
+  if (!postCommandService) {
+    throw new Error("Post Command Service Context is not provided");
   }
   const { showSnackbar, SnackbarComponent } = useSnackbar();
 
@@ -42,7 +42,8 @@ export default function EditPost() {
   const handleSave = async (value: PostCommand) => {
     setLoading(true);
     try {
-      const createdPost = await blogPostService.create(value);
+      console.log(value);
+      const createdPost = await postCommandService.create(value);
       showSnackbar("Post created successfully!", "success", () => {
         navigate(`/edit-post/${createdPost.id}`);
       });
