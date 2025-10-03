@@ -59,14 +59,24 @@ jobs:
           for i in "${!CONTAINERS[@]}"; do
             NAME="${CONTAINERS[$i]}_${APP_ENV}"
             PART="${PART_KEYS[$i]}"
-            echo "Creating container $NAME with partition key $PART..."
-            az cosmosdb sql container create \
-              --account-name ${{ secrets.COSMOS_ACCOUNT }} \
-              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-              --database-name "$COSMOS_DB_NAME" \
-              --name "$NAME" \
-              --partition-key-path "$PART" \
-              --throughput 100 || true
+
+            echo "Checking if container $NAME exists..."
+            if az cosmosdb sql container show \
+                --account-name ${{ secrets.COSMOS_ACCOUNT }} \
+                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                --database-name "$COSMOS_DB_NAME" \
+                --name "$NAME" > /dev/null 2>&1; then
+              echo "Container $NAME already exists. Skipping creation."
+            else
+              echo "Creating container $NAME with partition key $PART..."
+              az cosmosdb sql container create \
+                --account-name ${{ secrets.COSMOS_ACCOUNT }} \
+                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                --database-name "$COSMOS_DB_NAME" \
+                --name "$NAME" \
+                --partition-key-path "$PART" \
+                --throughput 400
+            fi
           done
 
       - name: Build And Deploy
