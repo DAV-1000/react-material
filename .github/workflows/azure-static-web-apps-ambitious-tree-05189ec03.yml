@@ -16,8 +16,8 @@ jobs:
     name: Build and Deploy Job
     env:
       COSMOS_DB_NAME: cosmicworks               # fixed database name
-      BASE_CONTAINERS: posts,authors     # comma-separated list of base container names
-      PARTITION_KEYS: /id,/id # comma-separated partition keys matching BASE_CONTAINERS
+      BASE_CONTAINERS: posts     # comma-separated list of base container names
+      PARTITION_KEYS: /id, # comma-separated partition keys matching BASE_CONTAINERS
     steps:
       - uses: actions/checkout@v3
 
