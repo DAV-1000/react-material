@@ -1,7 +1,10 @@
 const { copyItems } = require("./copy-items.cjs");
+// const { fetchAll } = require("./fetch-all.cjs");
 
 async function main() {
   try {
+    // const posts = await fetchAll();
+    // console.log(posts);
     await copyItems();
     console.log("Done");
   } catch (err) {
