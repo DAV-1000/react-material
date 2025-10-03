@@ -11,7 +11,7 @@ import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAuth } from "../context/AuthContext";
-import { BlogPostServiceContext } from "../services/BlogPostServiceContext";
+import { PostCommandServiceContext } from "../services/PostCommandServiceContext";
 
 interface DeleteButtonProps {
   id?: string;
@@ -20,7 +20,7 @@ interface DeleteButtonProps {
 const DeleteButton: React.FC<DeleteButtonProps> = ({ id }) => {
   const [open, setOpen] = useState(false);
   const { user, userLoading } = useAuth();
-  const blogPostService = useContext(BlogPostServiceContext);
+  const blogPostService = useContext(PostCommandServiceContext);
  const [alert, setAlert] = useState<{ severity: 'success' | 'error'; message: string } | null>(null);
 
   if (!id) return null; 

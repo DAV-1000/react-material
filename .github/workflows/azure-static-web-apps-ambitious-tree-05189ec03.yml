@@ -14,45 +14,71 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
+    env:
+      COSMOS_DB_NAME: cosmicworks               # fixed database name
+      BASE_CONTAINERS: posts,authors     # comma-separated list of base container names
+      PARTITION_KEYS: /id,/id # comma-separated partition keys matching BASE_CONTAINERS
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-          submodules: true
-          lfs: false
+
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: DefaultWorkingDirectory
+      - name: Set APP_ENV and populate .env
         run: |
-          echo "Workspace: $GITHUB_WORKSPACE"
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            echo "APP_ENV=staging" >> $GITHUB_ENV
+            echo "APP_ENV=staging" > $GITHUB_WORKSPACE/api/.env
+          else
+            echo "APP_ENV=production" >> $GITHUB_ENV
+            echo "APP_ENV=production" > $GITHUB_WORKSPACE/api/.env
+          fi
 
-      - name: Run only on PRs
-        if: ${{ github.event_name == 'pull_request' }}
-        run: echo "APP_ENV=staging" > $GITHUB_WORKSPACE/api/.env
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
 
-      - name: Run only on merges to main
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run: echo "APP_ENV=production" > $GITHUB_WORKSPACE/api/.env
+      - name: Ensure Cosmos DB SQL Database and Containers
+        run: |
+          # Create or verify database
+          az cosmosdb sql database create \
+            --account-name ${{ secrets.COSMOS_ACCOUNT }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name $COSMOS_DB_NAME
+
+          # Convert comma-separated container names and partition keys to arrays
+          IFS=',' read -ra CONTAINERS <<< "$BASE_CONTAINERS"
+          IFS=',' read -ra PART_KEYS <<< "$PARTITION_KEYS"
+
+          # Loop through containers and create each with environment suffix
+          for i in "${!CONTAINERS[@]}"; do
+            NAME="${CONTAINERS[$i]}_${APP_ENV}"
+            PART="${PART_KEYS[$i]}"
+            echo "Creating container $NAME with partition key $PART..."
+            az cosmosdb sql container create \
+              --account-name ${{ secrets.COSMOS_ACCOUNT }} \
+              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --database-name "$COSMOS_DB_NAME" \
+              --name "$NAME" \
+              --partition-key-path "$PART" \
+              --throughput 100 || true
+          done
 
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AMBITIOUS_TREE_05189EC03 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "frontend" # App source code path
-          api_location: "api" # Api source code path - optional
-          output_location: "dist" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
-            # Add any other environment variables your app requires here
+          app_location: "frontend"
+          api_location: "api"
+          output_location: "dist"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

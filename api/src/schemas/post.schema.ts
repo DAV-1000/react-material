@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { authorSchema } from "./author.schema";
+import { authorSchema } from "./author.schema.js";
 
 export const postSchema = z.object({
   id: z.string().min(1, "ID cannot be empty"),

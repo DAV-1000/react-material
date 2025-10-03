@@ -9,26 +9,17 @@ import { getClientPrincipal, requireRole } from "../auth.js";
 
 // reuse the same cache map defined in GET
 import { cache } from "./getPosts.js";
+import { getPostsContainer } from "../cosmos-client.js";
 
 export async function updatePost(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  
   const principal = getClientPrincipal(request);
 
   // Enforce editor role
   const authResponse = requireRole(principal, ["editor"]);
   if (authResponse) return authResponse;
-
-  const cosmosConnectionString = process.env.COSMOS_DB_CONNECTION_STRING;
-  if (!cosmosConnectionString) {
-    throw new Error("COSMOS_DB_CONNECTION_STRING not set");
-  }
-
-  const client = new CosmosClient(cosmosConnectionString);
-  const database = client.database("cosmicworks");
-  const container = database.container("posts");
 
   const id = request.params.id;
   if (!id) {
@@ -45,14 +36,24 @@ export async function updatePost(
 
   try {
     // Get existing post
+    const container = getPostsContainer();
     const { resource: existing } = await container.item(id, id).read();
 
     if (!existing) {
       return { status: 404, body: "Post not found" };
     }
 
+    const tags = (body.tags || [])
+      .slice()
+      .sort((a: string, b: string) => a.localeCompare(b));
+
     // Merge updates into existing post
-    const updated = { ...existing, ...body };
+    const updated = {
+      ...existing,
+      ...body,
+      tag: tags.join(", "),
+      tags: tags,
+    };
 
     // Replace in Cosmos
     const { resource } = await container.item(id, id).replace(updated);

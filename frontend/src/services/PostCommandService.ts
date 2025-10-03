@@ -1,38 +1,27 @@
-import { BlogPost } from "../types";
+import { PostCommand } from "../schemas/post.schema";
 const ARTICLE_URL = import.meta.env.VITE_BLOG_ARTICLE_URL;
 
-export interface BlogPostService {
-  // get: () => Promise<BlogPost[]>;
-  // getById: (id: string) => Promise<BlogPost>;
-    /** Get all blog posts */
-  get: () => Promise<BlogPost[]>;
-
+export interface PostCommandService {
   /** Get a single blog post by id */
-  getById: (id: string) => Promise<BlogPost>;
+  getById: (id: string) => Promise<PostCommand>;
 
   /** Create a new blog post */
-  create: (post: Omit<BlogPost, "id" | "createdAt">) => Promise<BlogPost>;
+  create: (post: Omit<PostCommand, "id" | "createdAt">) => Promise<PostCommand>;
 
   /** Update an existing blog post */
-  update: (id: string, post: Partial<Omit<BlogPost, "id" | "createdAt">>) => Promise<BlogPost>;
+  update: (
+    id: string,
+    post: Partial<Omit<PostCommand, "id" | "createdAt">>
+  ) => Promise<PostCommand>;
 
   /** Delete a blog post by id */
   delete: (id: string) => Promise<void>;
   getContent: (postId: string | null) => Promise<string>;
 }
 
-export const blogPostService: BlogPostService = {
-  get: async () => {
-    const response = await fetch('/api/posts');
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch posts');
-    }
-    return await response.json();
-  },
-
- async getById(id: string) {
-    const res = await fetch(`/api/posts/${id}`);
+export const postCommandService: PostCommandService = {
+  async getById(id: string) {
+    const res = await fetch(`/api/posts/${id}/edit`);
     if (!res.ok) {
       throw new Error(`Failed to fetch post ${id}: ${res.statusText}`);
     }
@@ -48,7 +37,9 @@ export const blogPostService: BlogPostService = {
     if (!res.ok) {
       throw new Error(`Failed to create post: ${res.statusText}`);
     }
-    return res.json();
+    const rtn = res.json();
+    console.log("Created post:", rtn);
+    return rtn;
   },
 
   async update(id, post) {
@@ -74,22 +65,24 @@ export const blogPostService: BlogPostService = {
 
   getContent: async (postId: string | null) => {
     if (!postId) {
-      throw new Error('Post ID is null');
+      throw new Error("Post ID is null");
     }
     const url = `${ARTICLE_URL}${postId}.md`;
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error('Failed to fetch content');
+      throw new Error("Failed to fetch content");
     }
 
     const text = await response.text();
 
-    if (text.trim().startsWith("<!DOCTYPE html") || text.trim().startsWith("<html")) {
+    if (
+      text.trim().startsWith("<!DOCTYPE html") ||
+      text.trim().startsWith("<html")
+    ) {
       return "CONTENT UNAVAILABLE";
     }
 
     return text;
-
   },
 };
