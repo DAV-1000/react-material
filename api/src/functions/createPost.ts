@@ -1,4 +1,3 @@
-import { CosmosClient } from "@azure/cosmos";
 import {
   app,
   HttpRequest,
@@ -8,9 +7,9 @@ import {
 import { cache } from "./getPosts.js"; // reuse the cache
 import { v4 as uuidv4 } from "uuid"; // npm install uuid
 import { getClientPrincipal, requireRole } from "../auth.js";
-import { COSMOS_DB_CONNECTION_STRING } from "../config.js";
 import { PostCommand, postSchema } from "../schemas/post.schema.js";
 import { ZodError } from "zod";
+import { getPostsContainer } from "../cosmos-client.js";
 
 export async function createPost(
   request: HttpRequest,
@@ -22,13 +21,7 @@ export async function createPost(
   const authResponse = requireRole(principal, ["editor"]);
   if (authResponse) return authResponse;
 
-  if (!COSMOS_DB_CONNECTION_STRING) {
-    throw new Error("COSMOS_DB_CONNECTION_STRING not set");
-  }
-
-  const client = new CosmosClient(COSMOS_DB_CONNECTION_STRING);
-  const database = client.database("cosmicworks");
-  const container = database.container("posts");
+  const container = getPostsContainer();
 
   const body = (await request.json().catch(() => null)) as Record<
     string,
@@ -37,8 +30,6 @@ export async function createPost(
   if (!body) {
     return { status: 400, body: "Invalid JSON body" };
   }
-
-  context.log(body);
 
   try {
     const tags = (body.tags || [])
@@ -54,8 +45,6 @@ export async function createPost(
       tag: tags.join(", "), // denormalized for query
       createdAt: new Date().toISOString(),
     };
-
-      context.log(newPost);
 
     const validatedPost: PostCommand = postSchema.parse(newPost);
 

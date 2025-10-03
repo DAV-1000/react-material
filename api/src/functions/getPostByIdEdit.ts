@@ -5,19 +5,14 @@ import {
   HttpResponseInit,
   InvocationContext,
 } from "@azure/functions";
-import { COSMOS_DB_CONNECTION_STRING } from "../config.js";
+import { getPostsContainer } from "../cosmos-client.js";
 
 export async function getPostByIdEdit(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  if (!COSMOS_DB_CONNECTION_STRING) {
-    throw new Error("COSMOS_DB_CONNECTION_STRING not set");
-  }
-  const client = new CosmosClient(COSMOS_DB_CONNECTION_STRING);
 
-  const database = client.database("cosmicworks");
-  const container = database.container("posts");
+  const container = getPostsContainer();
 
   const id = request.params.id;
   if (!id) {

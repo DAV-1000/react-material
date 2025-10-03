@@ -1,11 +1,10 @@
-import { CosmosClient } from "@azure/cosmos";
 import {
   app,
   HttpRequest,
   HttpResponseInit,
   InvocationContext,
 } from "@azure/functions";
-import { COSMOS_DB_CONNECTION_STRING, APP_ENV } from "../config.js";
+import { getPostsContainer } from "../cosmos-client.js";
 
 export const cache = new Map<string, { value: any; expiresAt: number }>();
 
@@ -13,6 +12,7 @@ export async function posts(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
+
   const key = "myData";
   const ttlMs = 5 * 60 * 1000; // cache for 5 minutes
 
@@ -26,13 +26,7 @@ export async function posts(
     };
   }
 
-  if (!COSMOS_DB_CONNECTION_STRING) {
-    throw new Error("COSMOS_DB_CONNECTION_STRING not set");
-  }
-  const client = new CosmosClient(COSMOS_DB_CONNECTION_STRING);
-
-  const database = client.database("cosmicworks");
-  const container = database.container("posts");
+  const container = getPostsContainer();
 
   const { resources } = await container.items
     .query("SELECT * FROM c")

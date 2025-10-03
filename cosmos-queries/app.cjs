@@ -1,9 +1,9 @@
-const { fetchAll } = require("./fetch-all.cjs");
+const { copyItems } = require("./copy-items.cjs");
 
 async function main() {
   try {
-    const posts = await fetchAll();
-    console.log(posts);
+    await copyItems();
+    console.log("Done");
   } catch (err) {
     console.error(err);
   }

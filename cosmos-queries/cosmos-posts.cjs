@@ -5,8 +5,8 @@ const client = new CosmosClient({
   key: process.env.COSMOS_KEY,
 });
 
-const database = client.database("cosmicworks");
+const PostsDatabase = client.database("cosmicworks");
 
-const PostsContainer = database.container("posts");
+const PostsContainer = PostsDatabase.container("posts");
 
-module.exports = { PostsContainer };
+module.exports = { PostsContainer, PostsDatabase };

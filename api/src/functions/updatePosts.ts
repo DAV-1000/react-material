@@ -9,7 +9,7 @@ import { getClientPrincipal, requireRole } from "../auth.js";
 
 // reuse the same cache map defined in GET
 import { cache } from "./getPosts.js";
-import { COSMOS_DB_CONNECTION_STRING } from "../config.js";
+import { getPostsContainer } from "../cosmos-client.js";
 
 export async function updatePost(
   request: HttpRequest,
@@ -20,13 +20,6 @@ export async function updatePost(
   // Enforce editor role
   const authResponse = requireRole(principal, ["editor"]);
   if (authResponse) return authResponse;
-
-  if (!COSMOS_DB_CONNECTION_STRING) {
-    throw new Error("COSMOS_DB_CONNECTION_STRING not set");
-  }
-  const client = new CosmosClient(COSMOS_DB_CONNECTION_STRING);
-  const database = client.database("cosmicworks");
-  const container = database.container("posts");
 
   const id = request.params.id;
   if (!id) {
@@ -43,6 +36,7 @@ export async function updatePost(
 
   try {
     // Get existing post
+    const container = getPostsContainer();
     const { resource: existing } = await container.item(id, id).read();
 
     if (!existing) {

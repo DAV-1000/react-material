@@ -8,6 +8,7 @@ import { cache } from "./getPosts.js"; // reuse the cache
 import { CosmosClient } from "@azure/cosmos";
 import { getClientPrincipal, requireRole } from "../auth.js";
 import { COSMOS_DB_CONNECTION_STRING } from "../config.js";
+import { getPostsContainer } from "../cosmos-client.js";
 
 export async function deletePost(
   request: HttpRequest,
@@ -19,13 +20,7 @@ export async function deletePost(
   const authResponse = requireRole(principal, ["editor"]);
   if (authResponse) return authResponse;
 
-  if (!COSMOS_DB_CONNECTION_STRING) {
-    throw new Error("COSMOS_DB_CONNECTION_STRING not set");
-  }
-  const client = new CosmosClient(COSMOS_DB_CONNECTION_STRING);
-
-  const database = client.database("cosmicworks");
-  const container = database.container("posts");
+  const container = getPostsContainer();
 
   const id = request.params.id;
   if (!id) {
