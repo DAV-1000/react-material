@@ -1,10 +1,16 @@
-import { test, expect } from '@playwright/test';
+// tests/protected-page.spec.js
+import { test, expect } from "@playwright/test";
 
-test('access protected page using stored GitHub session', async ({ browser }) => {
-  const context = await browser.newContext({ storageState: 'auth.json' });
-  
-  const page = await context.newPage();
+test("user can access protected page", async ({ page }) => {
+  const rawBaseURL = process.env.STATIC_WEB_APP_URL;
 
-  await page.goto('https://ambitious-tree-05189ec03-47.westeurope.1.azurestaticapps.net/blog');
-  await expect(page.locator('h1')).toHaveText('Posts');
+  if (!rawBaseURL) {
+    throw new Error(
+      "Environment variable STATIC_WEB_APP_URL is not defined or is empty."
+    );
+  }
+
+  const baseURL = rawBaseURL.replace(/\/$/, "");
+  await page.goto(`${baseURL}/blog`);
+  await expect(page.locator("h1")).toHaveText("Posts");
 });
