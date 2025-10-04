@@ -10,7 +10,7 @@
     "build:azure": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "playwright test --project=Chromium"
+    "test": "npx playwright install && playwright test --project=Chromium"
   },
   "engines": {
     "node": "20.x"
