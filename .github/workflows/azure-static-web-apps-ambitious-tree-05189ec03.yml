@@ -91,6 +91,18 @@ jobs:
           api_location: "api"
           output_location: "dist"
       
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright browsers
+        run: npx playwright install
+      
+      - name: Cleanup old Playwright reports
+        run: rm -rf playwright-report
+      
+      - name: Ensure Playwright report folder exists
+        run: mkdir -p playwright-report/html
+
       - name: Run Playwright tests
         env:
           STATIC_WEB_APP_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
