@@ -90,9 +90,12 @@ jobs:
           app_location: "frontend"
           api_location: "api"
           output_location: "dist"
-                
+      
+      - name: Set Static Web App URL Env Var
+        run: echo "STATIC_WEB_APP_URL=${{ steps.builddeploy.outputs.static_web_app_url }}" >> $GITHUB_ENV
+          
       - name: Output Preview Environment URL
-        run: echo ${{ steps.builddeploy.outputs.static_web_app_url }}
+        run: echo $STATIC_WEB_APP_URL
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
