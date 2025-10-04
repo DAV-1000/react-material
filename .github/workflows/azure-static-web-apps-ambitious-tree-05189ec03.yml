@@ -91,12 +91,9 @@ jobs:
           api_location: "api"
           output_location: "dist"
       
-      - name: Set Static Web App URL Env Var
-        run: echo "STATIC_WEB_APP_URL=${{ steps.builddeploy.outputs.static_web_app_url }}" >> $GITHUB_ENV
-
       - name: Run Playwright tests
         env:
-          STATIC_WEB_APP_URL: $STATIC_WEB_APP_URL
+          STATIC_WEB_APP_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
           GH_USER: ${{ secrets.GH_USER }}
           GH_PASS: ${{ secrets.GH_PASS }}
         working-directory: ./frontend
