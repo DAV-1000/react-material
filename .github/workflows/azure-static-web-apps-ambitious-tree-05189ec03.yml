@@ -99,6 +99,7 @@ jobs:
           STATIC_WEB_APP_URL: $STATIC_WEB_APP_URL
           GH_USER: ${{ secrets.GH_USER }}
           GH_PASS: ${{ secrets.GH_PASS }}
+        working-directory: ./frontend
         run: npx playwright test
 
   close_pull_request_job:
