@@ -13,12 +13,12 @@ const BlogButton: React.FC = () => {
 
   if (!user) {
     // User not logged in → show nothing
-    return "Log in...";
+    return null
   }
 
   // User logged in → check if they are in editor role
   if (!user.userRoles.includes("editor")) {
-    return "Unathorized";
+    return null;
   }
 
   const toRoute = `../blog`;

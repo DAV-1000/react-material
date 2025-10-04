@@ -16,8 +16,8 @@ jobs:
     name: Build and Deploy Job
     env:
       COSMOS_DB_NAME: cosmicworks               # fixed database name
-      BASE_CONTAINERS: posts,authors     # comma-separated list of base container names
-      PARTITION_KEYS: /id,/id # comma-separated partition keys matching BASE_CONTAINERS
+      BASE_CONTAINERS: posts     # comma-separated list of base container names
+      PARTITION_KEYS: /id, # comma-separated partition keys matching BASE_CONTAINERS
     steps:
       - uses: actions/checkout@v3
 
@@ -32,6 +32,7 @@ jobs:
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             echo "APP_ENV=staging" >> $GITHUB_ENV
             echo "APP_ENV=staging" > $GITHUB_WORKSPACE/api/.env
+    
           else
             echo "APP_ENV=production" >> $GITHUB_ENV
             echo "APP_ENV=production" > $GITHUB_WORKSPACE/api/.env
@@ -59,14 +60,24 @@ jobs:
           for i in "${!CONTAINERS[@]}"; do
             NAME="${CONTAINERS[$i]}_${APP_ENV}"
             PART="${PART_KEYS[$i]}"
-            echo "Creating container $NAME with partition key $PART..."
-            az cosmosdb sql container create \
-              --account-name ${{ secrets.COSMOS_ACCOUNT }} \
-              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-              --database-name "$COSMOS_DB_NAME" \
-              --name "$NAME" \
-              --partition-key-path "$PART" \
-              --throughput 100 || true
+
+            echo "Checking if container $NAME exists..."
+            if az cosmosdb sql container show \
+                --account-name ${{ secrets.COSMOS_ACCOUNT }} \
+                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                --database-name "$COSMOS_DB_NAME" \
+                --name "$NAME" > /dev/null 2>&1; then
+              echo "Container $NAME already exists. Skipping creation."
+            else
+              echo "Creating container $NAME with partition key $PART..."
+              az cosmosdb sql container create \
+                --account-name ${{ secrets.COSMOS_ACCOUNT }} \
+                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                --database-name "$COSMOS_DB_NAME" \
+                --name "$NAME" \
+                --partition-key-path "$PART" \
+                --throughput 400
+            fi
           done
 
       - name: Build And Deploy
@@ -79,6 +90,26 @@ jobs:
           app_location: "frontend"
           api_location: "api"
           output_location: "dist"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright browsers
+        run: npx playwright install
+      
+      - name: Cleanup old Playwright reports
+        run: rm -rf playwright-report
+      
+      - name: Ensure Playwright report folder exists
+        run: mkdir -p playwright-report/html
+
+      - name: Run Playwright tests
+        env:
+          STATIC_WEB_APP_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
+          GH_USER: ${{ secrets.GH_USER }}
+          GH_PASS: ${{ secrets.GH_PASS }}
+        working-directory: ./frontend
+        run: npx playwright test
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
