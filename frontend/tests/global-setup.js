@@ -50,12 +50,14 @@ export default async function globalSetup() {
   context = await browser.newContext();
   const page = await context.newPage();
 
-  console.log("Logging in as test user:", process.env.GH_USER);
+  const unprotectedPage = `${baseURL}/faq`;
+  console.log("Navigating to unprotected page:", unprotectedPage);
+  await page.goto(unprotectedPage);
 
-  await page.goto(`${baseURL}/faq`);
-  await page.click('text=GitHub');
+  await page.click('button:has-text("GitHub")');
 
   if (process.env.GH_USER && process.env.GH_PASS) {
+    console.log("Logging in as test user:", );
     await page.waitForURL('**/github.com/login**');
     await page.fill('input[name="login"]', process.env.GH_USER);
     await page.fill('input[name="password"]', process.env.GH_PASS);
