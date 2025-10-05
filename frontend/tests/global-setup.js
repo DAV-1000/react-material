@@ -31,6 +31,7 @@ export default async function globalSetup() {
     const page = await context.newPage();
 
     try {
+      console.log('Global Setup BASE_URL:', baseURL)
       // Check if the session is still valid
       await page.goto(`${baseURL}/blog`, { timeout: 15000 });
       await page.waitForSelector('h1:has-text("Post")', { timeout: 5000 });
@@ -38,7 +39,8 @@ export default async function globalSetup() {
       await browser.close();
       return;
     } catch (e) {
-      console.warn('⚠️ Existing auth expired. Removing old auth.json');
+      console.log('❌ Global Setup: Existing auth state is invalid or expired:', e.message);
+      console.warn('⚠️ Global Setup: Existing auth expired. Removing old auth.json');
       await context.close();
       fs.unlinkSync(storageFile); // Remove expired auth file
     }
