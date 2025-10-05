@@ -16,7 +16,7 @@ export default async function globalSetup() {
   }
 
   const baseURL = rawBaseURL.replace(/\/$/, "");
-  console.log('Using base URL:', baseURL);
+  console.log('Global Setup: Using base URL:', baseURL);
 
   // Per-preview auth file
   const branchName = process.env.GITHUB_HEAD_REF || 'local';
@@ -34,7 +34,7 @@ export default async function globalSetup() {
       console.log('Global Setup BASE_URL:', baseURL)
       // Check if the session is still valid
       await page.goto(`${baseURL}/blog`, { timeout: 15000 });
-      await page.waitForSelector('h1:has-text("Post")', { timeout: 5000 });
+      await page.waitForSelector('h1:has-text("Posts")', { timeout: 5000 });
       console.log('✅ Existing auth state is valid');
       await browser.close();
       return;
@@ -49,6 +49,8 @@ export default async function globalSetup() {
   // Create new context and login
   context = await browser.newContext();
   const page = await context.newPage();
+
+  console.log("Logging in as test user:", process.env.GH_USER);
 
   await page.goto(`${baseURL}/faq`);
   await page.click('text=GitHub');

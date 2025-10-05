@@ -24,6 +24,7 @@ test.describe("Public Routes", () => {
       page,
       baseURL,
     }) => {
+      console.log('Route Test: BASE_URL:', baseURL);
       if (!baseURL) {
         throw new Error(
           "Environment variable BASE_URL is not defined or is empty."
