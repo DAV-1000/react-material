@@ -90,13 +90,6 @@ jobs:
           app_location: "frontend"
           api_location: "api"
           output_location: "dist"
-      
-      - name: Run Playwright tests
-        env:
-          STATIC_WEB_APP_URL: ${{ steps.builddeploy.outputs.static_web_app_url }}
-          GH_USER: ${{ secrets.GH_USER }}
-          GH_PASS: ${{ secrets.GH_PASS }}
-        run: npm run test:all
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

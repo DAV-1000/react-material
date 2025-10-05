@@ -7,11 +7,11 @@ import path from 'path';
 dotenv.config(); // Load local .env if present
 
 export default async function globalSetup() {
-  const rawBaseURL = process.env.STATIC_WEB_APP_URL;
+  const rawBaseURL = process.env.BASE_URL;
 
   if (!rawBaseURL) {
     throw new Error(
-      "Environment variable STATIC_WEB_APP_URL is not defined or is empty."
+      "Environment variable BASE_URL is not defined or is empty."
     );
   }
 

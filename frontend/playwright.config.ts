@@ -30,7 +30,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.STATIC_WEB_APP_URL,
+    baseURL: process.env.BASE_URL,
 
     /* Use per-branch storage state for auth */
     storageState: storageFile,

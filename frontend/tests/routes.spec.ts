@@ -26,7 +26,7 @@ test.describe("Public Routes", () => {
     }) => {
       if (!baseURL) {
         throw new Error(
-          "Environment variable STATIC_WEB_APP_URL is not defined or is empty."
+          "Environment variable BASE_URL is not defined or is empty."
         );
       }
       baseURL = baseURL.replace(/\/$/, "");

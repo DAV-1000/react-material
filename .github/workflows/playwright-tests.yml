@@ -40,6 +40,8 @@ jobs:
         run: npx playwright test
         env:
           BASE_URL: ${{ github.event.inputs.base_url }}
+          GH_USER: ${{ secrets.GH_USER }}
+          GH_PASS: ${{ secrets.GH_PASS }}
 
       - name: Report Playwright test summary
         if: always()
