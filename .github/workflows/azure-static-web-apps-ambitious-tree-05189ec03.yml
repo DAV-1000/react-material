@@ -44,11 +44,15 @@ jobs:
 
       - name: Set APP_ENV for PRs
         if: github.event_name == 'pull_request'
-        run: echo "APP_ENV=staging" >> "$GITHUB_ENV"
+        run: |
+          echo "APP_ENV=staging" >> "$GITHUB_ENV"
+          printf "APP_ENV=staging\n" > "$GITHUB_WORKSPACE/api/.env"
 
       - name: Set APP_ENV for pushes
         if: github.event_name == 'push'
-        run: echo "APP_ENV=production" >> "$GITHUB_ENV"
+        run: |
+          echo "APP_ENV=production" >> "$GITHUB_ENV"
+          printf "APP_ENV=production\n" > "$GITHUB_WORKSPACE/api/.env"
 
       - name: Azure Login
         if: github.event_name == 'push'
