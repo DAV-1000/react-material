@@ -8,77 +8,125 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: swa-ambitious-tree-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     name: Build and Deploy Job
     env:
       COSMOS_DB_NAME: cosmicworks               # fixed database name
       BASE_CONTAINERS: posts     # comma-separated list of base container names
-      PARTITION_KEYS: /id, # comma-separated partition keys matching BASE_CONTAINERS
+      PARTITION_KEYS: /id # comma-separated partition keys matching BASE_CONTAINERS
+      CONTAINER_THROUGHPUT: 400
+      CONTAINER_AUTOSCALE: 'false'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: |
+            frontend/package-lock.json
+            api/package-lock.json
 
-      - name: Set APP_ENV and populate .env
-        run: |
-          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            echo "APP_ENV=staging" >> $GITHUB_ENV
-            echo "APP_ENV=staging" > $GITHUB_WORKSPACE/api/.env
-    
-          else
-            echo "APP_ENV=production" >> $GITHUB_ENV
-            echo "APP_ENV=production" > $GITHUB_WORKSPACE/api/.env
-          fi
+      - name: Set APP_ENV for PRs
+        if: github.event_name == 'pull_request'
+        run: echo "APP_ENV=staging" >> "$GITHUB_ENV"
+
+      - name: Set APP_ENV for pushes
+        if: github.event_name == 'push'
+        run: echo "APP_ENV=production" >> "$GITHUB_ENV"
 
       - name: Azure Login
+        if: github.event_name == 'push'
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          enable-AzPSSession: true
 
       - name: Ensure Cosmos DB SQL Database and Containers
+        if: github.event_name == 'push'
+        env:
+          AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          COSMOS_ACCOUNT: ${{ secrets.COSMOS_ACCOUNT }}
         run: |
+          set -Eeuo pipefail
+
           # Create or verify database
           az cosmosdb sql database create \
-            --account-name ${{ secrets.COSMOS_ACCOUNT }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name $COSMOS_DB_NAME
+            --account-name "$COSMOS_ACCOUNT" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --name "$COSMOS_DB_NAME" \
+            --only-show-errors
 
           # Convert comma-separated container names and partition keys to arrays
           IFS=',' read -ra CONTAINERS <<< "$BASE_CONTAINERS"
           IFS=',' read -ra PART_KEYS <<< "$PARTITION_KEYS"
 
+          if [ "${#CONTAINERS[@]}" -ne "${#PART_KEYS[@]}" ]; then
+            echo "Number of containers and partition keys must match" >&2
+            exit 1
+          fi
+
           # Loop through containers and create each with environment suffix
           for i in "${!CONTAINERS[@]}"; do
-            NAME="${CONTAINERS[$i]}_${APP_ENV}"
-            PART="${PART_KEYS[$i]}"
+            NAME="$(echo "${CONTAINERS[$i]}_${APP_ENV}" | xargs)"
+            PART="$(echo "${PART_KEYS[$i]}" | xargs)"
 
             echo "Checking if container $NAME exists..."
             if az cosmosdb sql container show \
-                --account-name ${{ secrets.COSMOS_ACCOUNT }} \
-                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                --account-name "$COSMOS_ACCOUNT" \
+                --resource-group "$AZURE_RESOURCE_GROUP" \
                 --database-name "$COSMOS_DB_NAME" \
                 --name "$NAME" > /dev/null 2>&1; then
               echo "Container $NAME already exists. Skipping creation."
             else
               echo "Creating container $NAME with partition key $PART..."
-              az cosmosdb sql container create \
-                --account-name ${{ secrets.COSMOS_ACCOUNT }} \
-                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-                --database-name "$COSMOS_DB_NAME" \
-                --name "$NAME" \
-                --partition-key-path "$PART" \
-                --throughput 400
+              if [[ "$CONTAINER_AUTOSCALE" == "true" ]]; then
+                az cosmosdb sql container create \
+                  --account-name "$COSMOS_ACCOUNT" \
+                  --resource-group "$AZURE_RESOURCE_GROUP" \
+                  --database-name "$COSMOS_DB_NAME" \
+                  --name "$NAME" \
+                  --partition-key-path "$PART" \
+                  --max-throughput "$CONTAINER_THROUGHPUT" \
+                  --only-show-errors
+              else
+                az cosmosdb sql container create \
+                  --account-name "$COSMOS_ACCOUNT" \
+                  --resource-group "$AZURE_RESOURCE_GROUP" \
+                  --database-name "$COSMOS_DB_NAME" \
+                  --name "$NAME" \
+                  --partition-key-path "$PART" \
+                  --throughput "$CONTAINER_THROUGHPUT" \
+                  --only-show-errors
+              fi
             fi
           done
+
+      - name: Install dependencies (frontend)
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build (frontend)
+        working-directory: frontend
+        run: npm run build
+
+      - name: Install dependencies (api)
+        working-directory: api
+        run: npm ci
 
       - name: Build And Deploy
         id: builddeploy
@@ -90,6 +138,8 @@ jobs:
           app_location: "frontend"
           api_location: "api"
           output_location: "dist"
+          skip_app_build: true
+          skip_api_build: true
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
