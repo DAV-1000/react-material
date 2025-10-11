@@ -36,7 +36,7 @@ export default async function globalSetup() {
   // Set JWT as a cookie
   const urlObj = new URL(baseURL);
   const cookie = {
-    name: 'auth_token',        // Change this to your app's cookie name
+    name: 'StaticWebAppsAuthCookie',        // Change this to your app's cookie name
     value: jwtToken,
     domain: urlObj.hostname,
     path: '/',
