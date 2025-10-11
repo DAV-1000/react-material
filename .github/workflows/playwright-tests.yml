@@ -35,6 +35,13 @@ jobs:
         working-directory: ./frontend
         run: npx playwright install --with-deps
 
+      - name: Debug GitHub context
+        run: |
+          echo "github.head_ref=${{ github.head_ref }}"
+          echo "github.ref_name=${{ github.ref_name }}"
+          echo "github.ref=${{ github.ref }}"
+          echo "branch input=${{ github.event.inputs.branch }}"
+
       - name: Run Playwright tests
         working-directory: ./frontend
         run: npx playwright test
