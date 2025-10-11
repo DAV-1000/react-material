@@ -59,7 +59,7 @@ export default async function globalSetup() {
   }
 
   // Save auth state
-  await context.storageState({ path: storageFile });
+  await context.storageState({ path: storageFile }); //<-- Save storage state to file referenced from playwright.config
   console.log(`✅ Auth state saved to ${storageFile} using JWT cookie`);
 
   await browser.close();

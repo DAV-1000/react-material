@@ -41,6 +41,7 @@ jobs:
         env:
           BASE_URL: ${{ github.event.inputs.base_url }}
           AUTH_JWT_BASE64: ${{ secrets.AUTH_STATE }}   # <-- populate from secret
+          GITHUB_HEAD_REF: ${{ github.head_ref || github.ref_name }}
 
       - name: Report Playwright test summary
         if: always()
