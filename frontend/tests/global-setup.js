@@ -18,9 +18,9 @@ export default async function globalSetup() {
   const baseURL = rawBaseURL.replace(/\/$/, "");
   console.log('Global Setup: Using base URL:', baseURL);
 
-  // Per-branch auth file
-  const branchName = process.env.GITHUB_HEAD_REF || 'local';
-  const storageFile = path.resolve(`auth-${branchName}.json`);
+  // // Per-branch auth file
+  // const branchName = process.env.GITHUB_HEAD_REF || 'local';
+  // const storageFile = path.resolve(`auth-${branchName}.json`);
 
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
