@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "getauth":"node save-auth.js",
     "clean": "rimraf dist",
     "dev": "vite",
     "build": "npm run clean && tsc -b && vite build",

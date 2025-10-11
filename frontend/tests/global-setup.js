@@ -18,64 +18,49 @@ export default async function globalSetup() {
   const baseURL = rawBaseURL.replace(/\/$/, "");
   console.log('Global Setup: Using base URL:', baseURL);
 
-  // Per-preview auth file
+  // Per-branch auth file
   const branchName = process.env.GITHUB_HEAD_REF || 'local';
   const storageFile = path.resolve(`auth-${branchName}.json`);
 
   const browser = await chromium.launch({ headless: true });
-  let context;
+  const context = await browser.newContext();
 
-  // Try to reuse existing auth state
-  if (fs.existsSync(storageFile)) {
-    context = await browser.newContext({ storageState: storageFile });
-    const page = await context.newPage();
-
-    try {
-      console.log('Global Setup BASE_URL:', baseURL)
-      // Check if the session is still valid
-      await page.goto(`${baseURL}/blog`, { timeout: 15000 });
-      await page.waitForSelector('h1:has-text("Posts")', { timeout: 5000 });
-      console.log('✅ Existing auth state is valid');
-      await browser.close();
-      return;
-    } catch (e) {
-      console.log('❌ Global Setup: Existing auth state is invalid or expired:', e.message);
-      console.warn('⚠️ Global Setup: Existing auth expired. Removing old auth.json');
-      await context.close();
-      fs.unlinkSync(storageFile); // Remove expired auth file
-    }
+  // Check for JWT token
+  const base64JWT = process.env.AUTH_JWT_BASE64;
+  if (!base64JWT) {
+    throw new Error("Environment variable AUTH_JWT_BASE64 is not set.");
   }
 
-  // Create new context and login
-  context = await browser.newContext();
+  const jwtToken = Buffer.from(base64JWT, 'base64').toString('utf-8');
+
+  // Set JWT as a cookie
+  const urlObj = new URL(baseURL);
+  const cookie = {
+    name: 'auth_token',        // Change this to your app's cookie name
+    value: jwtToken,
+    domain: urlObj.hostname,
+    path: '/',
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Lax',
+  };
+
+  await context.addCookies([cookie]);
+  console.log(`✅ JWT cookie set for ${cookie.domain}`);
+
+  // Optionally, verify auth by visiting a protected page
   const page = await context.newPage();
-
-  const unprotectedPage = `${baseURL}/faq`;
-  console.log("Navigating to unprotected page:", unprotectedPage);
-  await page.goto(unprotectedPage);
-
-  await page.click('button:has-text("GitHub")');
-
-  if (process.env.GH_USER && process.env.GH_PASS) {
-    console.log("Logging in as test user:", );
-    await page.waitForURL('**/github.com/login**');
-    await page.fill('input[name="login"]', process.env.GH_USER);
-    await page.fill('input[name="password"]', process.env.GH_PASS);
-    await page.click('input[name="commit"]');
-
-    // Handle OAuth authorize button if it appears
-    if (await page.locator('button:has-text("Authorize")').count()) {
-      await page.click('button:has-text("Authorize")');
-    }
-
-    await page.waitForURL(new RegExp(baseURL));
-  } else {
-    console.log('⚠️ No GH_USER/GH_PASS provided. Please log in manually...');
-    await page.waitForTimeout(60000);
+  try {
+    await page.goto(`${baseURL}/blog`, { timeout: 15000 });
+    await page.waitForSelector('h1:has-text("Posts")', { timeout: 5000 });
+    console.log('✅ JWT authentication appears valid');
+  } catch (e) {
+    console.warn('⚠️ JWT authentication may be invalid or expired:', e.message);
   }
 
   // Save auth state
   await context.storageState({ path: storageFile });
-  console.log(`✅ Auth state saved to ${storageFile}`);
+  console.log(`✅ Auth state saved to ${storageFile} using JWT cookie`);
+
   await browser.close();
 }
