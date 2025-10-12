@@ -1,12 +1,13 @@
 // tests/global-setup.js
 import { chromium } from "@playwright/test";
-import fs from "fs";
+import { storageFile } from './branch-storage.js';
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config(); // Load local .env if present
 
 export default async function globalSetup() {
+  console.log("BRANCH_NAME:", process.env.BRANCH_NAME);
+  
   const rawBaseURL = process.env.BASE_URL;
 
   if (!rawBaseURL) {
@@ -17,10 +18,6 @@ export default async function globalSetup() {
 
   const baseURL = rawBaseURL.replace(/\/$/, "");
   console.log("Global Setup: Using base URL:", baseURL);
-
-  // Per-branch auth file
-  const branchName = process.env.BRANCH_NAME || "local";
-  const storageFile = path.resolve(`auth-${branchName}.json`);
 
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();

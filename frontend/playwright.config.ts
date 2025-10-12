@@ -1,11 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
+import { storageFile } from './tests/branch-storage.js';
 
-/**
- * Determine branch name for per-preview auth storage
- */
-const branchName = process.env.BRANCH_NAME || 'local';
-const storageFile = path.resolve(`auth-${branchName}.json`);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
