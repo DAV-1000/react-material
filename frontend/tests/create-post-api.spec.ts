@@ -39,6 +39,20 @@ function expectIssue(issues: Array<{ path: (string | number)[]; message: string 
   );
 }
 
+function expectIssueUnderKey(
+  issues: Array<{ path: (string | number)[]; message: string }>,
+  key: string,
+  expectedMessage: string
+) {
+  const match = issues.find(
+    (issue) =>
+      issue.message === expectedMessage &&
+      Array.isArray(issue.path) &&
+      issue.path[0] === key
+  );
+  expect(match, `Expected issue under ${key} with message: ${expectedMessage}`).toBeTruthy();
+}
+
 // Note: Authorization is handled via global-setup and storageState configured in playwright.config.ts
 // These tests call the API directly and assert zod validation behavior.
 
@@ -90,8 +104,8 @@ test.describe("Create Post API validation (zod rules)", () => {
     const payload = { ...buildValidPost(), tags: ["alpha", ""] };
     const res = await postCreate(request, payload);
     const issues = await expectValidationError(res);
-    // Error is on the specific tag index
-    expectIssue(issues, ["tags", 1], "Tag cannot be empty");
+    // Server sorts tags before validation; assert under 'tags' regardless of index
+    expectIssueUnderKey(issues, "tags", "Tag cannot be empty");
   });
 
   test("rejects empty title", async ({ request }) => {
