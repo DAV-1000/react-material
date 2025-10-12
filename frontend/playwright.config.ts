@@ -5,6 +5,7 @@ import path from 'path';
  * Determine branch name for per-preview auth storage
  */
 const branchName = process.env.GITHUB_HEAD_REF || 'local';
+const storageFile = path.resolve(`auth-${branchName}.json`);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -30,6 +31,9 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.BASE_URL,
+
+    /* Use per-branch storage state for auth */
+    storageState: storageFile,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

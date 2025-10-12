@@ -1,5 +1,6 @@
 // tests/global-setup.js
 import { chromium } from '@playwright/test';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -30,12 +31,9 @@ export default async function globalSetup() {
     throw new Error("Environment variable AUTH_JWT_BASE64 is not set.");
   }
 
-  // const jwtToken = Buffer.from(base64JWT, 'base64').toString('utf-8');
-
-  // Set JWT as a cookie
   const urlObj = new URL(baseURL);
   const cookie = {
-    name: 'StaticWebAppsAuthCookie',        // Change this to your app's cookie name
+    name: 'StaticWebAppsAuthCookie', 
     value: base64JWT,
     domain: urlObj.hostname,
     path: '/',
@@ -59,6 +57,10 @@ export default async function globalSetup() {
   } catch (e) {
     console.warn('⚠️ JWT authentication may be invalid or expired:', e.message);
   }
+
+  // Save auth state
+  await context.storageState({ path: storageFile }); //<-- Save storage state to file referenced from playwright.config
+  console.log(`✅ Auth state saved to ${storageFile} using JWT cookie`);
 
   await browser.close();
 }
