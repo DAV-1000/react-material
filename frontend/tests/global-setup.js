@@ -40,10 +40,13 @@ export default async function globalSetup() {
     value: jwtToken,
     domain: urlObj.hostname,
     path: '/',
+    expires: 1760293451.249761,
     httpOnly: true,
     secure: true,
     sameSite: 'Lax',
   };
+
+ console.log('Cookie details:', JSON.stringify(cookie, null, 2));
 
   await context.addCookies([cookie]);
   console.log(`✅ JWT cookie set for ${cookie.domain}`);
