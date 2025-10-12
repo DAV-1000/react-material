@@ -42,7 +42,6 @@ export default function EditPost() {
   const handleSave = async (value: PostCommand) => {
     setLoading(true);
     try {
-      console.log(value);
       const createdPost = await postCommandService.create(value);
       showSnackbar("Post created successfully!", "success", () => {
         navigate(`/edit-post/${createdPost.id}`);

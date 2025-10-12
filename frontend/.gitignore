@@ -30,6 +30,9 @@ public/blog/
 .env
 .env.local
 
+#auth state
+auth-state.json
+
 # Playwright
 /test-results/
 /playwright-report/

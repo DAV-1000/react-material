@@ -6,6 +6,8 @@ import {
   InvocationContext,
 } from "@azure/functions";
 import { getClientPrincipal, requireRole } from "../auth.js";
+import { PostCommand, postSchema } from "../schemas/post.schema.js";
+import { ZodError } from "zod";
 
 // reuse the same cache map defined in GET
 import { cache } from "./getPosts.js";
@@ -43,20 +45,24 @@ export async function updatePost(
       return { status: 404, body: "Post not found" };
     }
 
-    const tags = (body.tags || [])
-      .slice()
+    const tags = (body.tags
+      ? body.tags.slice()
+      : (existing.tags as string[]))
       .sort((a: string, b: string) => a.localeCompare(b));
 
     // Merge updates into existing post
-    const updated = {
+    const updatedRaw = {
       ...existing,
       ...body,
       tag: tags.join(", "),
-      tags: tags,
+      tags,
     };
 
+    // Validate against zod schema
+    const validated: PostCommand = postSchema.parse(updatedRaw);
+
     // Replace in Cosmos
-    const { resource } = await container.item(id, id).replace(updated);
+    const { resource } = await container.item(id, id).replace(validated);
 
     // Invalidate cache
     cache.delete("myData");
@@ -66,7 +72,17 @@ export async function updatePost(
       jsonBody: resource,
     };
   } catch (err: any) {
-    context.error(`Failed to update post: ${err.message}`);
+    if (err instanceof ZodError) {
+      return {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: "Validation failed",
+          errors: err.issues,
+        }),
+      };
+    }
+    context.error(`Failed to update post: ${err?.message ?? String(err)}`);
     return { status: 500, body: "Failed to update post" };
   }
 }

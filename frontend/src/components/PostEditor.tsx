@@ -91,8 +91,6 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
       return;
     }
 
-    // If valid
-    console.log("✅ Upserted Entity:", validatedPost.data);
     const validPost = {
       ...validatedPost.data,
     };
