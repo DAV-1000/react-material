@@ -30,13 +30,13 @@ export default async function globalSetup() {
     throw new Error("Environment variable AUTH_JWT_BASE64 is not set.");
   }
 
-  const jwtToken = Buffer.from(base64JWT, 'base64').toString('utf-8');
+  // const jwtToken = Buffer.from(base64JWT, 'base64').toString('utf-8');
 
   // Set JWT as a cookie
   const urlObj = new URL(baseURL);
   const cookie = {
     name: 'StaticWebAppsAuthCookie',        // Change this to your app's cookie name
-    value: jwtToken,
+    value: base64JWT,
     domain: urlObj.hostname,
     path: '/',
     expires: 1760293451.249761,
