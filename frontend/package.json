@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "getauth":"node save-auth.js",
     "clean": "rimraf dist",
     "dev": "vite",
     "build": "npm run clean && tsc -b && vite build",
     "build:azure": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "playwright test --project=Chromium"
+    "test": "npx playwright install && playwright test --project=Chromium"
   },
   "engines": {
     "node": "20.x"

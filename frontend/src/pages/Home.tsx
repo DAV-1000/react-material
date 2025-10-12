@@ -44,7 +44,6 @@ export default function Home() {
     // This will be called after the debounce time (default 300ms)
   const handleSearchTermChange = (searchTerm: string | null) => {
     setSearchTerm(searchTerm);
-    console.log('Search term changed:', searchTerm);
   };
 
   const handleFocus = (index: number) => {
