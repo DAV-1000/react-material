@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 dotenv.config(); // Load local .env if present
 
 export default async function globalSetup() {
-  console.log("BRANCH_NAME:", process.env.BRANCH_NAME);
   
   const rawBaseURL = process.env.BASE_URL;
 
@@ -39,8 +38,6 @@ export default async function globalSetup() {
     secure: true,
     sameSite: "Lax",
   };
-
-  console.log("Cookie details:", JSON.stringify(cookie, null, 2));
 
   await context.addCookies([cookie]);
   console.log(`✅ JWT cookie set for ${cookie.domain}`);

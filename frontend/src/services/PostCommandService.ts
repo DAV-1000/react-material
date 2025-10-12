@@ -38,7 +38,6 @@ export const postCommandService: PostCommandService = {
       throw new Error(`Failed to create post: ${res.statusText}`);
     }
     const rtn = res.json();
-    console.log("Created post:", rtn);
     return rtn;
   },
 

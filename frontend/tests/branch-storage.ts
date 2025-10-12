@@ -19,6 +19,3 @@ export const branchName = sanitizeBranchName(rawBranchName);
  * Compute full path for the branch-specific storage file.
  */
 export const storageFile = path.resolve(`auth-${branchName}.json`);
-
-console.log(`Using branchName: ${branchName}`);
-console.log(`Auth storage file: ${storageFile}`);

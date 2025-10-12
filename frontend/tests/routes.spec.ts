@@ -24,7 +24,6 @@ test.describe("Public Routes", () => {
       page,
       baseURL,
     }) => {
-      console.log('Route Test: BASE_URL:', baseURL);
       if (!baseURL) {
         throw new Error(
           "Environment variable BASE_URL is not defined or is empty."
@@ -34,7 +33,6 @@ test.describe("Public Routes", () => {
       const url = route.path.startsWith("http")
         ? route.path
         : `${baseURL}${route.path}`;
-      console.log(url);
       await page.goto(url);
 
       // Check that the page has a body element
