@@ -65,13 +65,40 @@ function expectIssueUnderKey(
 test.describe("Update Post API validation (zod rules)", () => {
   let postId: string;
   let base: any;
+  const createdPostIds: string[] = [];
 
   test.beforeEach(async ({ request }) => {
     base = buildValidPost();
     const created = await postCreate(request, base);
     postId = created.id;
+    createdPostIds.push(postId);
     expect(typeof postId).toBe("string");
     expect(postId.length).toBeGreaterThan(0);
+  });
+
+  test.afterEach(async ({ request }) => {
+    if (postId) {
+      try {
+        await request.delete(`/api/posts/${postId}`);
+      } catch {
+        // ignore cleanup errors
+      } finally {
+        // remove from tracking if present
+        const idx = createdPostIds.indexOf(postId);
+        if (idx !== -1) createdPostIds.splice(idx, 1);
+      }
+    }
+  });
+
+  test.afterAll(async ({ request }) => {
+    // Best-effort cleanup of any remaining created posts
+    for (const id of createdPostIds.splice(0)) {
+      try {
+        await request.delete(`/api/posts/${id}`);
+      } catch {
+        // ignore cleanup errors
+      }
+    }
   });
 
   test("succeeds with valid update payload", async ({ request }) => {
