@@ -1,8 +1,8 @@
 // tests/global-setup.js
-import { chromium } from '@playwright/test';
-import fs from 'fs';
-import dotenv from 'dotenv';
-import path from 'path';
+import { chromium } from "@playwright/test";
+import fs from "fs";
+import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config(); // Load local .env if present
 
@@ -16,10 +16,10 @@ export default async function globalSetup() {
   }
 
   const baseURL = rawBaseURL.replace(/\/$/, "");
-  console.log('Global Setup: Using base URL:', baseURL);
+  console.log("Global Setup: Using base URL:", baseURL);
 
   // Per-branch auth file
-  const branchName = process.env.GITHUB_HEAD_REF || 'local';
+  const branchName = process.env.BRANCH_NAME || "local";
   const storageFile = path.resolve(`auth-${branchName}.json`);
 
   const browser = await chromium.launch({ headless: true });
@@ -33,17 +33,17 @@ export default async function globalSetup() {
 
   const urlObj = new URL(baseURL);
   const cookie = {
-    name: 'StaticWebAppsAuthCookie', 
+    name: "StaticWebAppsAuthCookie",
     value: base64JWT,
     domain: urlObj.hostname,
-    path: '/',
+    path: "/",
     expires: 1760293451.249761,
     httpOnly: true,
     secure: true,
-    sameSite: 'Lax',
+    sameSite: "Lax",
   };
 
- console.log('Cookie details:', JSON.stringify(cookie, null, 2));
+  console.log("Cookie details:", JSON.stringify(cookie, null, 2));
 
   await context.addCookies([cookie]);
   console.log(`✅ JWT cookie set for ${cookie.domain}`);
@@ -53,9 +53,9 @@ export default async function globalSetup() {
   try {
     await page.goto(`${baseURL}/blog`, { timeout: 15000 });
     await page.waitForSelector('h1:has-text("Posts")', { timeout: 5000 });
-    console.log('✅ JWT authentication appears valid');
+    console.log("✅ JWT authentication appears valid");
   } catch (e) {
-    console.warn('⚠️ JWT authentication may be invalid or expired:', e.message);
+    console.warn("⚠️ JWT authentication may be invalid or expired:", e.message);
   }
 
   // Save auth state
