@@ -33,7 +33,6 @@ export default async function globalSetup() {
     value: base64JWT,
     domain: urlObj.hostname,
     path: "/",
-    expires: 1760293451.249761,
     httpOnly: true,
     secure: true,
     sameSite: "Lax",
