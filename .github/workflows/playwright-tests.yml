@@ -13,7 +13,8 @@ on:
         default: ''
 
 env:
-  # Use PR head ref if available, else use the manual branch input
+  BASE_URL: ${{ github.event.inputs.base_url }}
+  AUTH_JWT_BASE64: ${{ secrets.AUTH_STATE }}
   BRANCH_NAME: ${{ github.head_ref != '' && github.head_ref || github.event.inputs.branch }}
 
 jobs:
@@ -21,6 +22,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Verify JWT authentication with SWA
+        run: |
+          echo "Testing authentication against SWA..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Cookie: StaticWebAppsAuthCookie=${AUTH_JWT_BASE64}" \
+            "${BASE_URL}/api/auth-test-endpoint")
+
+          if [ "$response" != "200" ]; then
+            echo "::error::Authentication failed with HTTP $response. The provided AUTH_JWT_BASE64 may be invalid or expired."
+            exit 1
+          fi
+
+          echo "✅ Authentication test succeeded (HTTP 200)."
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -39,19 +54,10 @@ jobs:
         working-directory: ./frontend
         run: npx playwright install --with-deps
 
-      - name: Debug GitHub context
-        run: |
-          echo "github.head_ref=${{ github.head_ref }}"
-          echo "github.ref_name=${{ github.ref_name }}"
-          echo "github.ref=${{ github.ref }}"
-          echo "branch input=${{ github.event.inputs.branch }}"
-
       - name: Run Playwright tests
         working-directory: ./frontend
         run: npx playwright test
-        env:
-          BASE_URL: ${{ github.event.inputs.base_url }}
-          AUTH_JWT_BASE64: ${{ secrets.AUTH_STATE }}   # <-- populate from secret
+
 
       - name: Report Playwright test summary
         if: always()
