@@ -31,7 +31,9 @@ async function gotoEditPost(page: any, baseURL?: string | undefined, id = "post-
     });
   });
 
-  await page.goto(`${trimmed}/${id}/edit`);
+  const url = `${trimmed}/${id}/edit`;
+  console.log(`Navigating to: ${url}`);
+  await page.goto(url);
 }
 
 test.describe("Edit Post UI - Zod validation", () => {
