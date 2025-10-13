@@ -81,7 +81,7 @@ test.describe("Create Post UI", () => {
     await page.getByRole("button", { name: /close/i }).click();
 
     // Navigates to Edit Post page with created id
-    await expect(page).toHaveURL(/\/edit-post\/post-xyz$/);
+    await expect(page).toHaveURL(/\/post-xyz\/edit$/);
     await expect(page.locator("h1")).toHaveText("Edit Post");
   });
 

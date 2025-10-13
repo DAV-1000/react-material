@@ -44,7 +44,7 @@ export default function EditPost() {
     try {
       const createdPost = await postCommandService.create(value);
       showSnackbar("Post created successfully!", "success", () => {
-        navigate(`/edit-post/${createdPost.id}`);
+        navigate(`/${createdPost.id}/edit`);
       });
     } catch (err: any) {
       showSnackbar(`Failed to save post: ${err.message}`, "error");
