@@ -30,7 +30,7 @@ const EditButton: React.FC<EditButtonProps> = ({ id }) => {
     return null;
   }
 
-  const toRoute = `../edit-post/${encodeURIComponent(id)}`;
+  const toRoute = `../${encodeURIComponent(id)}/edit`;
 
   return (
     <IconButton
