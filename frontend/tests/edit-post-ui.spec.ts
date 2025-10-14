@@ -1,33 +1,24 @@
 import { test, expect } from "@playwright/test";
+import { buildValidPost, postCreate } from "./post-utils";
 
-function buildValidPost(id: string) {
-  return {
-    id,
-    img: "image.png",
-    tags: ["alpha", "beta"],
-    title: "A valid post title",
-    description: "A valid description.",
-    authors: [
-      {
-        name: "Alice",
-        avatar: "avatar.jpg",
-      },
-    ],
-  };
-}
-
-async function gotoEditPost(page: any, baseURL?: string | undefined, id = "post-xyz") {
+async function gotoEditPost(
+  page: any,
+  baseURL: string | undefined,
+  id: string
+) {
   if (!baseURL) {
-    throw new Error("Environment variable BASE_URL is not defined or is empty.");
+    throw new Error(
+      "Environment variable BASE_URL is not defined or is empty."
+    );
   }
   const trimmed = baseURL.replace(/\/$/, "");
 
   // Stub the initial GET for the edit page data
-  await page.route(`**/api/posts/${id}/edit`, async (route) => {
+  await page.route(`**/api/posts/${id}/edit`, async (route: any) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify(buildValidPost(id)),
+      body: JSON.stringify(buildValidPost()),
     });
   });
 
@@ -37,8 +28,35 @@ async function gotoEditPost(page: any, baseURL?: string | undefined, id = "post-
 }
 
 test.describe("Edit Post UI - Zod validation", () => {
-  test("shows zod validation errors when required fields are cleared", async ({ page, baseURL }) => {
-    await gotoEditPost(page, baseURL);
+  let postId: string;
+  let base: any;
+  const createdPostIds: string[] = [];
+
+  test.beforeEach(async ({ request }) => {
+    base = buildValidPost();
+    const created = await postCreate(request, base);
+    postId = created.id;
+    createdPostIds.push(postId);
+    expect(typeof postId).toBe("string");
+    expect(postId.length).toBeGreaterThan(0);
+  });
+
+  test.afterAll(async ({ request }) => {
+    // Best-effort cleanup of any remaining created posts
+    for (const id of createdPostIds.splice(0)) {
+      try {
+        await request.delete(`/api/posts/${id}`);
+      } catch {
+        // ignore cleanup errors
+      }
+    }
+  });
+
+  test("shows zod validation errors when required fields are cleared", async ({
+    page,
+    baseURL,
+  }) => {
+    await gotoEditPost(page, baseURL, postId);
 
     // Clear required fields
     await page.getByLabel("Image URL").fill("");
@@ -55,8 +73,11 @@ test.describe("Edit Post UI - Zod validation", () => {
     await expect(page.getByText("Description cannot be null")).toBeVisible();
   });
 
-  test("shows nested author validation errors when author fields are empty", async ({ page, baseURL }) => {
-    await gotoEditPost(page, baseURL);
+  test("shows nested author validation errors when author fields are empty", async ({
+    page,
+    baseURL,
+  }) => {
+    await gotoEditPost(page, baseURL, postId);
 
     // Clear nested author fields
     await page.getByLabel("Name").fill("");

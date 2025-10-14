@@ -1,25 +1,5 @@
 import { test, expect } from "@playwright/test";
-
-function buildValidPost() {
-  return {
-    img: "image.jpg",
-    tags: ["alpha", "beta"],
-    title: "A valid post title",
-    description: "A valid description within the allowed length.",
-    authors: [
-      {
-        name: "Alice",
-        avatar: "avatar.png",
-      },
-    ],
-  };
-}
-
-async function postCreate(request: any, data: Record<string, any>) {
-  const res = await request.post("/api/posts", { data });
-  expect(res.status(), await res.text()).toBe(201);
-  return res.json();
-}
+import { buildValidPost, postCreate } from "./post-utils";
 
 async function putUpdate(request: any, id: string, data: Record<string, any>) {
   const res = await request.put(`/api/posts/${id}`, { data });
