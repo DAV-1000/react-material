@@ -55,7 +55,7 @@ export default function App(props: { disableCustomTheme?: boolean }) {
             />
             <Route path="/posts/:id" element={<PostDetail />} />
             <Route
-              path="/edit-post/:id"
+              path="/:id/edit"
               element={
                 <ProtectedRoute>
                   <EditPost />

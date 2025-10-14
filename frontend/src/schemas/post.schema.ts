@@ -3,10 +3,23 @@ import { authorSchema } from "./author.schema";
 
 export const postSchema = z.object({
   id: z.string().min(1, "ID cannot be empty"),
-  img: z
-    .string()
-    .min(1, "Image is required")
-    .regex(/\.(jpg|jpeg|png|gif|webp)$/i, "Must be a valid image file"),
+  img: z.string().superRefine((val, ctx) => {
+    if (!val || val.trim().length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Image is required",
+      });
+      return;
+    }
+
+    const isValidImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(val);
+    if (!isValidImage) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Must be a valid image file",
+      });
+    }
+  }),
   tags: z
     .array(z.string().min(1, "Tag cannot be empty"))
     .nonempty("Must contain at least one valid tag"),

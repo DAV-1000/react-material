@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 // Helper to build a valid post payload matching api/src/schemas/post.schema.ts
-function buildValidPost() {
+export function buildValidPost() {
   return {
     img: "image.jpg",
     tags: ["alpha", "beta"],
@@ -16,7 +16,7 @@ function buildValidPost() {
   };
 }
 
-async function postCreate(request: any, data: Record<string, any>) {
+export async function postCreate(request: any, data: Record<string, any>) {
   const res = await request.post("/api/posts", {
     data,
   });
