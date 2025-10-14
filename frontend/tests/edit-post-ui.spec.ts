@@ -80,6 +80,12 @@ test.describe("Edit Post UI - Zod validation", () => {
     await expect(page.getByText("Image is required")).toBeVisible();
     await expect(page.getByText("Title cannot be null")).toBeVisible();
     await expect(page.getByText("Description cannot be null")).toBeVisible();
+
+    await page.getByLabel("Image URL").fill("file.txt");
+        // Attempt to save
+    await page.getByRole("button", { name: "Save Entity" }).click();
+        // Field-level validation messages from zod schema
+    await expect(page.getByText("Must be a valid image file")).toBeVisible();
   });
 
   test("shows nested author validation errors when author fields are empty", async ({
