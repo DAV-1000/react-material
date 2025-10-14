@@ -28,17 +28,26 @@ async function gotoEditPost(
 }
 
 test.describe("Edit Post UI - Zod validation", () => {
-  let postId: string;
-  let base: any;
+  let postIdAuthor: string;
+  let baseAuthor: any;
+    let postIdFields: string;
+  let baseFields: any;
   const createdPostIds: string[] = [];
 
-  test.beforeEach(async ({ request }) => {
-    base = buildValidPost();
-    const created = await postCreate(request, base);
-    postId = created.id;
-    createdPostIds.push(postId);
-    expect(typeof postId).toBe("string");
-    expect(postId.length).toBeGreaterThan(0);
+  test.beforeAll(async ({ request }) => {
+    baseAuthor = buildValidPost();
+    let created = await postCreate(request, baseAuthor);
+    postIdAuthor = created.id;
+    createdPostIds.push(postIdAuthor);
+    expect(typeof postIdAuthor).toBe("string");
+    expect(postIdAuthor.length).toBeGreaterThan(0);
+
+    baseFields = buildValidPost();
+    created = await postCreate(request, baseFields);
+    postIdFields = created.id;
+    createdPostIds.push(postIdFields);
+    expect(typeof postIdFields).toBe("string");
+    expect(postIdFields.length).toBeGreaterThan(0);
   });
 
   test.afterAll(async ({ request }) => {
@@ -56,7 +65,7 @@ test.describe("Edit Post UI - Zod validation", () => {
     page,
     baseURL,
   }) => {
-    await gotoEditPost(page, baseURL, postId);
+    await gotoEditPost(page, baseURL, postIdFields);
 
     // Clear required fields
     await page.getByLabel("Image URL").fill("");
@@ -77,7 +86,7 @@ test.describe("Edit Post UI - Zod validation", () => {
     page,
     baseURL,
   }) => {
-    await gotoEditPost(page, baseURL, postId);
+    await gotoEditPost(page, baseURL, postIdAuthor);
 
     // Clear nested author fields
     await page.getByLabel("Name").fill("");
