@@ -45,12 +45,14 @@ jobs:
       - name: Set APP_ENV for PRs
         if: github.event_name == 'pull_request'
         run: |
+          echo "github.event_name == '${{ github.event_name }}' "
           echo "APP_ENV=staging" >> "$GITHUB_ENV"
           printf "APP_ENV=staging\n" > "$GITHUB_WORKSPACE/api/.env"
 
       - name: Set APP_ENV for pushes
         if: github.event_name == 'push'
         run: |
+          echo "github.event_name == '${{ github.event_name }}' "
           echo "APP_ENV=production" >> "$GITHUB_ENV"
           printf "APP_ENV=production\n" > "$GITHUB_WORKSPACE/api/.env"
 
