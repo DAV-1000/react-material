@@ -32,7 +32,7 @@ test.describe("Edit Post UI - Zod validation", () => {
   let baseAuthor: any;
     let postIdFields: string;
   let baseFields: any;
-  const createdPostIds: string[] = [];
+ const createdPostIds: string[] = [];
 
   test.beforeAll(async ({ request }) => {
     baseAuthor = buildValidPost();
@@ -50,16 +50,16 @@ test.describe("Edit Post UI - Zod validation", () => {
     expect(postIdFields.length).toBeGreaterThan(0);
   });
 
-  // test.afterAll(async ({ request }) => {
-  //   // Best-effort cleanup of any remaining created posts
-  //   for (const id of createdPostIds.splice(0)) {
-  //     try {
-  //       await request.delete(`/api/posts/${id}`);
-  //     } catch {
-  //       // ignore cleanup errors
-  //     }
-  //   }
-  // });
+  test.afterAll(async ({ request }) => {
+    // Best-effort cleanup of any remaining created posts
+    for (const id of createdPostIds.splice(0)) {
+      try {
+        await request.delete(`/api/posts/${id}`);
+      } catch {
+        // ignore cleanup errors
+      }
+    }
+  });
 
   test("shows zod validation errors when required fields are cleared", async ({
     page,
