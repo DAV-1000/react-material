@@ -5,9 +5,7 @@ import {
   InvocationContext,
 } from "@azure/functions";
 import { cache } from "./getPosts.js"; // reuse the cache
-import { CosmosClient } from "@azure/cosmos";
 import { getClientPrincipal, requireRole } from "../auth.js";
-import { COSMOS_DB_CONNECTION_STRING } from "../config.js";
 import { getPostsContainer } from "../cosmos-client.js";
 
 export async function deletePost(

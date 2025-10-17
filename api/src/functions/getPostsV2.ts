@@ -15,8 +15,8 @@ export async function postsV2(
   const container = getPostsContainer();
 
   // --- Parse query parameters ---
-  const page = parseInt(request.query.get("page") || "1");
-  const pageSize = parseInt(request.query.get("pageSize") || "10");
+  const page = Number.parseInt(request.query.get("page") || "1");
+  const pageSize = Number.parseInt(request.query.get("pageSize") || "10");
   const sortBy = request.query.get("sortBy") || "createdAt";
   const sortOrder = request.query.get("sortOrder")?.toUpperCase() === "DESC" ? "DESC" : "ASC";
   const filterField = request.query.get("filterField");

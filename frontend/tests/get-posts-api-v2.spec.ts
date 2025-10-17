@@ -14,7 +14,7 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
     console.log("API Test: Using base URL:", baseURL);
   });
 
-  test("GET /api/v2/posts returns posts with correct structure", async ({}) => {
+  test("GET /api/v2/posts returns posts with correct structure", async () => {
     const apiContext = await request.newContext();
     const response = await apiContext.get(`${baseURL}/api/v2/posts`);
     expect(response.ok()).toBeTruthy();
@@ -28,7 +28,7 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
     expect(Array.isArray(body.data)).toBe(true);
   });
 
-  test("GET /api/v2/posts supports paging with page & pageSize", async ({}) => {
+  test("GET /api/v2/posts supports paging with page & pageSize", async () => {
     const context = await request.newContext();
 
     // Fetch first page
@@ -55,7 +55,7 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
     }
   });
 
-  test("GET /api/v2/posts supports filtering and sorting", async ({}) => {
+  test("GET /api/v2/posts supports filtering and sorting", async () => {
     const context = await request.newContext();
 
     // Adjust field names if needed (author, category, etc.)
