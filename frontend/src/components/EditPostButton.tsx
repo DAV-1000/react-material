@@ -8,12 +8,13 @@ interface EditButtonProps {
   id?: string;
 }
 
+
+
 const EditButton: React.FC<EditButtonProps> = ({ id }) => {
+  const { user, userLoading } = useAuth();
   if (!id) {
     return null;
   }
-
-  const { user, userLoading } = useAuth();
 
   if (userLoading) {
     // User details being retrieved → show nothing
