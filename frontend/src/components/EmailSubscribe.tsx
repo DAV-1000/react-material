@@ -3,12 +3,14 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import { useAuth } from "../context/AuthContext";
 
 interface EmailSubscribeProps {
   onSubscribe: (email: string) => void;
 }
 
 const EmailSubscribe: React.FC<EmailSubscribeProps> = ({ onSubscribe }) => {
+  const { user, userLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
 
@@ -27,6 +29,10 @@ const EmailSubscribe: React.FC<EmailSubscribeProps> = ({ onSubscribe }) => {
       setError(true);
     }
   };
+    // User logged in → check if they are in editor role
+  if (!user?.userRoles?.includes("authenticated")) {
+    return null;
+  }
 
   return (
     <Stack direction="row" spacing={1} useFlexGap>

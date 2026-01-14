@@ -78,7 +78,8 @@ export default function Footer() {
                 variant="body2"
                 sx={{ color: "text.secondary", mb: 2 }}
               >
-                Subscribe for weekly updates. No spams ever!
+                Subscribe for weekly updates on new features, tutorials, and
+                more.
               </Typography>
               <EmailSubscribe onSubscribe={handleEmailSubscribe} />
 

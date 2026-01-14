@@ -8,8 +8,6 @@ interface EditButtonProps {
   id?: string;
 }
 
-
-
 const EditButton: React.FC<EditButtonProps> = ({ id }) => {
   const { user, userLoading } = useAuth();
   if (!id) {

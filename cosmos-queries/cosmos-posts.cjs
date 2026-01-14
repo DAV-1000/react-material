@@ -7,6 +7,6 @@ const client = new CosmosClient({
 
 const PostsDatabase = client.database("cosmicworks");
 
-const PostsContainer = PostsDatabase.container("posts");
+const PostsContainer = PostsDatabase.container("posts_production");
 
 module.exports = { PostsContainer, PostsDatabase };
