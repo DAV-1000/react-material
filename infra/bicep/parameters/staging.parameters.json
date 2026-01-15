@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "accountName": {
-      "value": "cosmicworks-stg-account"
+      "value": "cosmosdatabase1"
     },
     "location": {
-      "value": "eastus"
+      "value": "UK South"
     },
     "databaseId": {
       "value": "cosmicworks"
