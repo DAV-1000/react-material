@@ -17,12 +17,13 @@ param databaseThroughput int = 0
 var schema = json(loadTextContent('../cosmos/cosmos-schema.json'))
 var containers = schema.containers
 
-// sonarignore: azureresourcemanager:S6378
-// Managed identity is not applicable for Cosmos DB; access is via client identities.
 resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2021-04-15' = {
   name: accountName
   location: location
   kind: 'GlobalDocumentDB'
+  identity: {
+    type: 'None'
+  }
   properties: {
     databaseAccountOfferType: 'Standard'
     consistencyPolicy: {
@@ -38,8 +39,6 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2021-04-15' = {
   }
 }
 
-// sonarignore: azureresourcemanager:S6378
-// Managed identity is not applicable for Cosmos DB; access is via client identities.
 // SQL database resource (optionally set throughput)
 resource sqlDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2021-04-15' = {
   parent: cosmos
@@ -53,9 +52,6 @@ resource sqlDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2021-04-15' =
     } : {}
   }
 }
-
-// sonarignore: azureresourcemanager:S6378
-// Managed identity is not applicable for Cosmos DB; access is via client identities.
 // Create containers described in the shared schema; append envSuffix to container names
 resource containersRes 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2021-04-15' = [for c in containers: {
   name: '${cosmos.name}/${databaseId}${envSuffix}/${c.name}${envSuffix}'
