@@ -18,13 +18,19 @@ export async function postsV2(
   const page = Number.parseInt(request.query.get("page") || "1");
   const pageSize = Number.parseInt(request.query.get("pageSize") || "10");
   const sortBy = request.query.get("sortBy") || "createdAt";
-  const sortOrder = request.query.get("sortOrder")?.toUpperCase() === "DESC" ? "DESC" : "ASC";
-  const filterField = request.query.get("filterField");
-  const filterValue = request.query.get("filterValue");
+  const sortOrder =
+    request.query.get("sortOrder")?.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
-  // --- Cache key includes paging, sorting & filtering ---
-  const key = `posts:${page}:${pageSize}:${sortBy}:${sortOrder}:${filterField || ""}:${filterValue || ""}`;
-  const ttlMs = 5 * 60 * 1000; // 5 minutes
+  // ✅ NEW: tags filtering (comma-separated)
+  const tagsParam = request.query.get("tags");
+  const tags = tagsParam
+    ? tagsParam.split(",").map((t) => t.trim()).filter(Boolean)
+    : [];
+
+  // --- Cache key includes tags ---
+  const key = `posts:${page}:${pageSize}:${sortBy}:${sortOrder}:${tags.join(",")}`;
+  const ttlMs = 5 * 60 * 1000;
+
   const cached = cache.get(key);
   if (cached && cached.expiresAt > Date.now()) {
     return {
@@ -38,9 +44,21 @@ export async function postsV2(
   let query = `SELECT * FROM c`;
   const parameters: any[] = [];
 
-  if (filterField && filterValue) {
-    query += ` WHERE c.${filterField} = @filterValue`;
-    parameters.push({ name: "@filterValue", value: filterValue });
+  if (tags.length > 0) {
+    const conditions = tags.map((tag, i) => {
+      parameters.push({ name: `@tag${i}`, value: tag.toLowerCase() });
+    
+      return `
+        EXISTS (
+          SELECT VALUE t 
+          FROM t IN c.tags 
+          WHERE LOWER(t) = @tag${i}
+        )
+      `;
+    });
+  
+    // ✅ ALL tags must match
+    query += ` WHERE ${conditions.join(" AND ")}`;
   }
 
   query += ` ORDER BY c.${sortBy} ${sortOrder}`;
@@ -63,8 +81,7 @@ export async function postsV2(
     totalPages,
     sortBy,
     sortOrder,
-    filterField,
-    filterValue,
+    tags,
     data: pagedData,
   };
 

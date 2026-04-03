@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-import StyledCardItem from '../components/StyledCardItem';
 import { usePostQueryService } from '../services/PostQueryServiceContext';
 import { useEffect, useState } from 'react';
 import TagChips from '../components/TagChips';
 import type { PostQuery, Tag } from '../types';
 import Search from '../components/Search';
+import { GetFilteredParams } from '../services/PostQueryService';
+import PostsLayout from '../components/PostsLayout';
 
   const tags : Tag[] = [
     { tag: null , label: 'All categories' },
@@ -32,14 +32,27 @@ export default function Home() {
     null,
   );
 
+  const homepageLayout = [
+  { id: "hero-left", md: 6, indices: [0] },
+  { id: "hero-right", md: 6, indices: [1] },
+  { id: "feature", md: 4, indices: [2] },
+  { id: "stacked", md: 4, indices: [3, 4], stacked: true, showImage: false },
+  { id: "side", md: 4, indices: [5] },
+];
+
   useEffect(() => {
-    svc!.get()
+    const params: GetFilteredParams = {};
+    if(selectedTag) {
+      params.tags = [selectedTag];
+    }
+
+    svc!.getFiltered(params)
     .then((posts) => {
-          setPosts(posts);
+          setPosts(posts.data);
         })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [svc]);
+  }, [svc, selectedTag]);
 
     // This will be called after the debounce time (default 300ms)
   const handleSearchTermChange = (searchTerm: string | null) => {
@@ -118,67 +131,15 @@ export default function Home() {
 
         </Box>
       </Box>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <StyledCardItem data={posts[0]} 
-          index={0} 
-          focusedIndex={focusedCardIndex} 
-          onFocus={() => handleFocus(0)} 
-          onBlur={handleBlur}
-          selectedTag={selectedTag}
-          searchTerm={searchTerm}  />
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <StyledCardItem data={posts[1]} 
-          index={1} 
-          focusedIndex={focusedCardIndex} 
-          onFocus={() => handleFocus(1)} 
-          onBlur={handleBlur}
-          selectedTag={selectedTag}
-          searchTerm={searchTerm}  />
-        </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <StyledCardItem data={posts[2]} 
-          index={2} 
-          focusedIndex={focusedCardIndex} 
-          onFocus={() => handleFocus(2)} 
-          onBlur={handleBlur}
-          selectedTag={selectedTag}
-          searchTerm={searchTerm}  />
-        </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Box
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}
-          >
-          <StyledCardItem data={posts[3]} 
-          index={3} 
-          focusedIndex={focusedCardIndex} 
-          onFocus={() => handleFocus(3)} 
-          onBlur={handleBlur}
-          showImage={false}
-          selectedTag={selectedTag}
-          searchTerm={searchTerm}  />
-
-          <StyledCardItem data={posts[4]} 
-          index={4} 
-          focusedIndex={focusedCardIndex} 
-          onFocus={() => handleFocus(4)} 
-          onBlur={handleBlur}
-          showImage={false}
-          selectedTag={selectedTag}
-          searchTerm={searchTerm}  />
-          </Box>
-        </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <StyledCardItem data={posts[5]} 
-          index={5} 
-          focusedIndex={focusedCardIndex} 
-          onFocus={() => handleFocus(5)} 
-          onBlur={handleBlur}
-          selectedTag={selectedTag}
-          searchTerm={searchTerm}  />
-        </Grid>
-      </Grid>
+<PostsLayout
+  posts={posts}
+  layout={homepageLayout}
+  focusedCardIndex={focusedCardIndex}
+  handleFocus={handleFocus}
+  handleBlur={handleBlur}
+  selectedTag={selectedTag}
+  searchTerm={searchTerm}
+/>
     </Box>
   );
 }
