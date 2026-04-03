@@ -10,16 +10,15 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pull-requests: write
-
 concurrency:
   group: swa-ambitious-tree-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build_and_deploy_job:
+    permissions:
+      contents: read
+      pull-requests: write
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -62,65 +61,25 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Ensure Cosmos DB SQL Database and Containers
+      - name: Deploy Cosmos DB (Bicep)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          COSMOS_ACCOUNT: ${{ secrets.COSMOS_ACCOUNT }}
         run: |
           set -Eeuo pipefail
 
-          # Create or verify database
-          az cosmosdb sql database create \
-            --account-name "$COSMOS_ACCOUNT" \
+          # Run what-if then apply the Bicep deployment for Cosmos
+          az deployment group what-if \
             --resource-group "$AZURE_RESOURCE_GROUP" \
-            --name "$COSMOS_DB_NAME" \
+            --template-file infra/bicep/main.bicep \
+            --parameters @infra/bicep/parameters/production.parameters.json \
             --only-show-errors
 
-          # Convert comma-separated container names and partition keys to arrays
-          IFS=',' read -ra CONTAINERS <<< "$BASE_CONTAINERS"
-          IFS=',' read -ra PART_KEYS <<< "$PARTITION_KEYS"
-
-          if [ "${#CONTAINERS[@]}" -ne "${#PART_KEYS[@]}" ]; then
-            echo "Number of containers and partition keys must match" >&2
-            exit 1
-          fi
-
-          # Loop through containers and create each with environment suffix
-          for i in "${!CONTAINERS[@]}"; do
-            NAME="$(echo "${CONTAINERS[$i]}_${APP_ENV}" | xargs)"
-            PART="$(echo "${PART_KEYS[$i]}" | xargs)"
-
-            echo "Checking if container $NAME exists..."
-            if az cosmosdb sql container show \
-                --account-name "$COSMOS_ACCOUNT" \
-                --resource-group "$AZURE_RESOURCE_GROUP" \
-                --database-name "$COSMOS_DB_NAME" \
-                --name "$NAME" > /dev/null 2>&1; then
-              echo "Container $NAME already exists. Skipping creation."
-            else
-              echo "Creating container $NAME with partition key $PART..."
-              if [[ "$CONTAINER_AUTOSCALE" == "true" ]]; then
-                az cosmosdb sql container create \
-                  --account-name "$COSMOS_ACCOUNT" \
-                  --resource-group "$AZURE_RESOURCE_GROUP" \
-                  --database-name "$COSMOS_DB_NAME" \
-                  --name "$NAME" \
-                  --partition-key-path "$PART" \
-                  --max-throughput "$CONTAINER_THROUGHPUT" \
-                  --only-show-errors
-              else
-                az cosmosdb sql container create \
-                  --account-name "$COSMOS_ACCOUNT" \
-                  --resource-group "$AZURE_RESOURCE_GROUP" \
-                  --database-name "$COSMOS_DB_NAME" \
-                  --name "$NAME" \
-                  --partition-key-path "$PART" \
-                  --throughput "$CONTAINER_THROUGHPUT" \
-                  --only-show-errors
-              fi
-            fi
-          done
+          az deployment group create \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --template-file infra/bicep/main.bicep \
+            --parameters @infra/bicep/parameters/production.parameters.json \
+            --only-show-errors
 
       - name: Install dependencies (frontend)
         working-directory: frontend
