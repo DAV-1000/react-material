@@ -16,8 +16,8 @@ interface StyledCardItemProps {
   onFocus: (index: number) => void;
   onBlur: () => void;
   showImage?: boolean; // Optional prop to control image rendering
-  selectedTag: string | null;
-  searchTerm: string | null;
+  selectedTag?: string | null;
+  searchTerm?: string | null;
 }
 
 const StyledCardItem: React.FC<StyledCardItemProps> = ({

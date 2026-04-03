@@ -1,10 +1,19 @@
 
-import { PostQuery } from "../types";
+import { PagedResponse, PostQuery } from "../types";
 const ARTICLE_URL = import.meta.env.VITE_BLOG_ARTICLE_URL;
 
-export interface PostQueryService {
+export type GetFilteredParams = {
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortOrder?: "ASC" | "DESC";
+  tags?: string[];
+};
 
-  get: () => Promise<PostQuery[]>;
+export interface PostQueryService {
+  getFiltered: (params: GetFilteredParams) => Promise<PagedResponse<PostQuery>>;
+
+  getAll: () => Promise<PostQuery[]>;
 
   /** Get a single blog post by id */
   getById: (id: string) => Promise<PostQuery>;
@@ -13,7 +22,25 @@ export interface PostQueryService {
 }
 
 export const postQueryService: PostQueryService = {
-  get: async () => {
+  getFiltered: async (params: GetFilteredParams = {}) => {
+      const query = new URLSearchParams();
+
+      if (params.page !== undefined) query.append("page", params.page.toString());
+      if (params.pageSize !== undefined) query.append("pageSize", params.pageSize.toString());
+      if (params.sortBy) query.append("sortBy", params.sortBy);
+      if (params.sortOrder) query.append("sortOrder", params.sortOrder);
+      if (params.tags?.length) query.append("tags", params.tags.join(","));
+
+      const url = `/api/v2/posts?${query.toString()}`;
+    
+      const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch posts');
+    }
+    return await response.json();
+  },
+  getAll: async () => {
     const response = await fetch('/api/posts');
 
     if (!response.ok) {

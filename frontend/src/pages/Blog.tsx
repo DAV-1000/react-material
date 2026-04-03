@@ -20,8 +20,8 @@ export default function Blog() {
     setLoading(true);
     setError(null);
     try {
-      const data = await svc!.get();
-      setPosts(data);
+      const data = await svc!.getFiltered({});
+      setPosts(data.data);
     } catch (err: any) {
       setError(err.message || 'Unknown error');
     } finally {
