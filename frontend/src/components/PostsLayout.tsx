@@ -4,7 +4,6 @@ import StyledCardItem from "./StyledCardItem";
 import Box from "@mui/material/Box";
 
 type StyledCardItemProps = {
-  key: number;
   data: Post;
   index: number;
   focusedIndex: number | null;
@@ -42,12 +41,12 @@ const PostsLayout: React.FC<PostsLayoutProps> = ({
   selectedTag,
   searchTerm,
 }: PostsLayoutProps) => {
+
 const getCardProps = (
   index: number,
   post: Post,
   extra: Partial<Omit<StyledCardItemProps, "data" | "index">> = {}
 ): StyledCardItemProps => ({
-  key: index,
   data: post,
   index,
   focusedIndex: focusedCardIndex,
@@ -73,11 +72,12 @@ const getCardProps = (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
                 {validPosts.map((post, i) => {
                   const index = section.indices[i];
+                  const props = getCardProps(index, post, {
+                    showImage: section.showImage ?? true,
+                  }); 
                   return (
                     <StyledCardItem
-                      {...getCardProps(index, post, {
-                        showImage: section.showImage ?? true,
-                      })}
+                      key={index} {...props}
                     />
                   );
                 })}
@@ -85,11 +85,12 @@ const getCardProps = (
             ) : (
               validPosts.map((post, i) => {
                 const index = section.indices[i];
+                const props = getCardProps(index, post, {
+                  showImage: section.showImage ?? true,
+                });
                 return (
                   <StyledCardItem
-                    {...getCardProps(index, post, {
-                      showImage: section.showImage ?? true,
-                    })}
+                    key={index} {...props}
                   />
                 );
               })

@@ -64,9 +64,12 @@ export async function postsV2(
   query += ` ORDER BY c.${sortBy} ${sortOrder}`;
 
   // --- Fetch data ---
-  const { resources } = await container.items
-    .query({ query, parameters })
-    .fetchAll();
+const iterator = container.items.query(
+  { query, parameters },
+  { maxItemCount: pageSize }
+);
+
+const { resources, continuationToken } = await iterator.fetchNext();
 
   // --- Paging logic ---
   const totalItems = resources.length;
@@ -75,6 +78,7 @@ export async function postsV2(
   const pagedData = resources.slice(startIndex, startIndex + pageSize);
 
   const responseBody = {
+    continuationToken,
     page,
     pageSize,
     totalItems,

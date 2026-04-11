@@ -22,6 +22,7 @@ export interface PostQuery {
 }
 
 export interface PagedResponse<T> {
+  continuationToken?: string | null;
   page: number;
   pageSize: number;
   totalItems: number;

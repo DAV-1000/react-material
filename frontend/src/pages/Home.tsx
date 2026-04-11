@@ -42,9 +42,11 @@ export default function Home() {
 
   useEffect(() => {
     const params: GetFilteredParams = {};
-    if(selectedTag) {
-      params.tags = [selectedTag];
-    }
+
+    params.pageSize = 6;
+    params.sortBy = "createdAt";
+    params.sortOrder = "DESC";  
+    params.tags = selectedTag ? [selectedTag] : [];
 
     svc!.getFiltered(params)
     .then((posts) => {
