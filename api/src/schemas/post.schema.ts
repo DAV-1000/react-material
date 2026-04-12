@@ -7,6 +7,7 @@ export const postSchema = z.object({
     .string()
     .min(1, "Image is required")
     .regex(/\.(jpg|jpeg|png|gif|webp)$/i, "Must be a valid image file"),
+  tag: z.string(),
   tags: z
     .array(z.string().min(1, "Tag cannot be empty"))
     .nonempty("Must contain at least one valid tag"),
@@ -27,6 +28,7 @@ export function newPost(): PostCommand {
   return {
     id: "NEW_POST",
     img: "",
+    tag: "",
     tags: [],
     title: "",
     description: "",

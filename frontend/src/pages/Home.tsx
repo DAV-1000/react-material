@@ -44,7 +44,7 @@ export default function Home() {
     const params: GetFilteredParams = {};
 
     params.pageSize = 6;
-    params.sortBy = "createdAt";
+    params.sortBy = "title";
     params.sortOrder = "DESC";  
     params.tags = selectedTag ? [selectedTag] : [];
 

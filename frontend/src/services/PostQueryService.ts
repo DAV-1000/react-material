@@ -9,26 +9,39 @@ export type GetFilteredParams = {
   tags?: string[];
 };
 
-type ContinuationResponse<T> = {
-  continuationToken: string | null;
+type OffsetResponse<T> = {
   data: T[];
+  page: number;
+  pageSize: number;
 };
 
 export interface PostQueryService {
-  getFiltered: (params?: GetFilteredParams) => Promise<ContinuationResponse<PostQuery> & {
-    hasNext: boolean;
-    hasPrev: boolean;
-  }>;
+  getFiltered: (
+    params?: GetFilteredParams
+  ) => Promise<
+    OffsetResponse<PostQuery> & {
+      hasNext: boolean;
+      hasPrev: boolean;
+    }
+  >;
 
-  next: (params?: GetFilteredParams) => Promise<ContinuationResponse<PostQuery> & {
-    hasNext: boolean;
-    hasPrev: boolean;
-  }>;
+  next: (
+    params?: GetFilteredParams
+  ) => Promise<
+    OffsetResponse<PostQuery> & {
+      hasNext: boolean;
+      hasPrev: boolean;
+    }
+  >;
 
-  prev: (params?: GetFilteredParams) => Promise<ContinuationResponse<PostQuery> & {
-    hasNext: boolean;
-    hasPrev: boolean;
-  }>;
+  prev: (
+    params?: GetFilteredParams
+  ) => Promise<
+    OffsetResponse<PostQuery> & {
+      hasNext: boolean;
+      hasPrev: boolean;
+    }
+  >;
 
   reset: () => void;
 
@@ -37,16 +50,15 @@ export interface PostQueryService {
   getContent: (postId: string | null) => Promise<string>;
 }
 
-// --- 🔁 Pagination state (client-side token stack) ---
-let tokens: (string | null)[] = [null];
-let index = 0;
+// --- 📄 Pagination state ---
+let page = 1;
 let lastQueryKey = "";
 
 // --- Helpers ---
 const buildQueryKey = (params: GetFilteredParams) =>
   JSON.stringify({
     pageSize: params.pageSize ?? 10,
-    sortBy: params.sortBy ?? "createdAt",
+    sortBy: params.sortBy ?? "title",
     sortOrder: params.sortOrder ?? "ASC",
     tags: params.tags ?? [],
   });
@@ -55,28 +67,21 @@ const ensureQueryState = (params: GetFilteredParams) => {
   const key = buildQueryKey(params);
 
   if (key !== lastQueryKey) {
-    tokens = [null];
-    index = 0;
+    page = 1;
     lastQueryKey = key;
   }
 };
 
-const buildUrl = (
-  params: GetFilteredParams,
-  continuationToken?: string | null
-) => {
+const buildUrl = (params: GetFilteredParams, page: number) => {
   const query = new URLSearchParams();
 
   query.set("pageSize", String(params.pageSize ?? 10));
-  query.set("sortBy", params.sortBy ?? "createdAt");
+  query.set("page", String(page)); // ✅ use page instead of token
+  query.set("sortBy", params.sortBy ?? "title");
   query.set("sortOrder", params.sortOrder ?? "ASC");
 
   if (params.tags?.length) {
     query.set("tags", params.tags.join(","));
-  }
-
-  if (continuationToken) {
-    query.set("continuationToken", continuationToken);
   }
 
   return `/api/v2/posts?${query.toString()}`;
@@ -85,9 +90,9 @@ const buildUrl = (
 // --- Core fetch ---
 const fetchPage = async (
   params: GetFilteredParams,
-  token: string | null
-): Promise<ContinuationResponse<PostQuery>> => {
-  const url = buildUrl(params, token);
+  page: number
+): Promise<OffsetResponse<PostQuery>> => {
+  const url = buildUrl(params, page);
 
   const response = await fetch(url);
   if (!response.ok) {
@@ -102,61 +107,47 @@ export const postQueryService: PostQueryService = {
   async getFiltered(params: GetFilteredParams = {}) {
     ensureQueryState(params);
 
-    const token = tokens[index];
-    const data = await fetchPage(params, token);
+    const data = await fetchPage(params, page);
 
     return {
       ...data,
-      hasNext: !!data.continuationToken,
-      hasPrev: index > 0,
+      hasNext: data.data.length === (params.pageSize ?? 10), // ✅ heuristic
+      hasPrev: page > 1,
     };
   },
 
   async next(params: GetFilteredParams = {}) {
     ensureQueryState(params);
 
-    const currentToken = tokens[index];
-    const data = await fetchPage(params, currentToken);
+    page++;
 
-    const nextToken = data.continuationToken ?? null;
-
-    // store next token safely
-    if (tokens[index + 1] !== nextToken) {
-      tokens = tokens.slice(0, index + 1);
-      tokens.push(nextToken);
-    }
-
-    index++;
+    const data = await fetchPage(params, page);
 
     return {
       ...data,
-      hasNext: !!nextToken,
-      hasPrev: index > 0,
+      hasNext: data.data.length === (params.pageSize ?? 10),
+      hasPrev: page > 1,
     };
   },
 
   async prev(params: GetFilteredParams = {}) {
     ensureQueryState(params);
 
-    if (index === 0) {
-      return this.getFiltered(params);
+    if (page > 1) {
+      page--;
     }
 
-    index--;
-
-    const token = tokens[index];
-    const data = await fetchPage(params, token);
+    const data = await fetchPage(params, page);
 
     return {
       ...data,
-      hasNext: !!data.continuationToken,
-      hasPrev: index > 0,
+      hasNext: data.data.length === (params.pageSize ?? 10),
+      hasPrev: page > 1,
     };
   },
 
   reset() {
-    tokens = [null];
-    index = 0;
+    page = 1;
     lastQueryKey = "";
   },
 

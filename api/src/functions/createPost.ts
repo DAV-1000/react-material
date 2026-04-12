@@ -43,7 +43,7 @@ export async function createPost(
       content: body.content,
       tags: tags,
       tag: tags.join(", "), // denormalized for query
-      createdAt: new Date().toISOString(),
+      // createdAt: new Date().toISOString(),
     };
 
     const validatedPost: PostCommand = postSchema.parse(newPost);
@@ -51,7 +51,7 @@ export async function createPost(
     const { resource } = await container.items.create(validatedPost);
 
     // Invalidate cache so GET will include new post
-    cache.delete("myData");
+    cache.clear();
 
     return {
       status: 201,

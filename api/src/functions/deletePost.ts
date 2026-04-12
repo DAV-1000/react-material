@@ -37,7 +37,7 @@ export async function deletePost(
     await container.item(id, id).delete();
 
     // Invalidate cache so GET sees the latest data
-    cache.delete("myData");
+    cache.clear();
 
     return {
       status: 204, // No Content
