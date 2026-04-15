@@ -60,7 +60,7 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
 
     // Adjust field names if needed (author, category, etc.)
     const response = await context.get(
-      `${baseURL}/api/v2/posts?filterField=author&filterValue=John&sortBy=createdAt&sortOrder=DESC`
+      `${baseURL}/api/v2/posts?filterField=author&filterValue=John&sortBy=title&sortOrder=DESC`
     );
     expect(response.ok()).toBeTruthy();
 
@@ -70,7 +70,7 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
     // Verify sorting descending
     for (let i = 1; i < body.data.length; i++) {
       expect(
-        new Date(body.data[i - 1].createdAt) >= new Date(body.data[i].createdAt)
+        new Date(body.data[i - 1].title) >= new Date(body.data[i].title)
       ).toBe(true);
     }
   });

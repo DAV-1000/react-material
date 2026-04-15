@@ -21,6 +21,21 @@ export interface PostQuery {
   authors: Author[];
 }
 
+export interface PagedResponse<T> {
+  continuationToken?: string | null;
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc'; // adjust if needed
+  filterField: string;
+  filterValue: string;
+  data: T[];
+}
+
+
+
 export interface Tag {
   tag: string | null;
   label: string;

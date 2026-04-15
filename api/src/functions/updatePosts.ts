@@ -49,6 +49,8 @@ export async function updatePost(
       : (existing.tags as string[]))
       .sort((a: string, b: string) => a.localeCompare(b));
 
+      console.log("Updating post:", { id, body, existing, tags });
+
     // Merge updates into existing post
     const updatedRaw = {
       ...existing,
@@ -57,6 +59,8 @@ export async function updatePost(
       tags,
     };
 
+    console.log("Updated post raw data:", updatedRaw);
+
     // Validate against zod schema
     const validated: PostCommand = postSchema.parse(updatedRaw);
 
@@ -64,7 +68,7 @@ export async function updatePost(
     const { resource } = await container.item(id, id).replace(validated);
 
     // Invalidate cache
-    cache.delete("myData");
+    cache.clear();
 
     return {
       status: 200,
