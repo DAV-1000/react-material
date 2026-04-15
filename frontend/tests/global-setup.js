@@ -1,9 +1,6 @@
 // tests/global-setup.js
 import { chromium } from "@playwright/test";
 import { storageFile } from './branch-storage.js';
-import dotenv from "dotenv";
-
-dotenv.config(); // Load local .env if present
 
 export default async function globalSetup() {
   
