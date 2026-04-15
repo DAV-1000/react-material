@@ -1,6 +1,6 @@
 const { PostsDatabase } = require("./cosmos-posts.cjs");
-const sourceContainerId = "posts";
-const targetContainerId = "posts_production";
+const sourceContainerId = "posts_production";
+const targetContainerId = "posts";
 
 async function copyItems() {
 

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "getauth":"node save-auth.js",
+    "getauth": "node save-auth.js",
     "clean": "rimraf dist",
     "dev": "vite",
     "build": "npm run clean && tsc -b && vite build",
@@ -22,7 +22,6 @@
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
     "@mui/x-data-grid": "^8.9.2",
-    "dotenv": "^17.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-markdown": "^10.1.0",
