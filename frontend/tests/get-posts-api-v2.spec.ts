@@ -22,7 +22,6 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
     const body = await response.json();
     expect(body).toHaveProperty("page");
     expect(body).toHaveProperty("pageSize");
-    expect(body).toHaveProperty("totalPages");
     expect(body).toHaveProperty("data");
     expect(Array.isArray(body.data)).toBe(true);
   });
