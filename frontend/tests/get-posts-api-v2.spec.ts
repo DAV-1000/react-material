@@ -1,6 +1,6 @@
 import { test, expect, request } from "@playwright/test";
 
-test.describe("/api/v2/posts API (in-memory paging)", () => {
+test.describe("@smoke /api/v2/posts API (in-memory paging)", () => {
   let baseURL: string;
 
   test.beforeAll(() => {
@@ -14,7 +14,7 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
     console.log("API Test: Using base URL:", baseURL);
   });
 
-  test("GET /api/v2/posts returns posts with correct structure", async () => {
+  test("@smoke GET /api/v2/posts returns posts with correct structure", async () => {
     const apiContext = await request.newContext();
     const response = await apiContext.get(`${baseURL}/api/v2/posts`);
     expect(response.ok()).toBeTruthy();
@@ -53,23 +53,21 @@ test.describe("/api/v2/posts API (in-memory paging)", () => {
     }
   });
 
-  // test("GET /api/v2/posts supports filtering and sorting", async () => {
-  //   const context = await request.newContext();
+test("@smoke GET /api/v2/posts supports filtering", async () => {
+  const context = await request.newContext();
+  const tagToFilter = "Company";
 
-  //   // Adjust field names if needed (author, category, etc.)
-  //   const response = await context.get(
-  //     `${baseURL}/api/v2/posts?filterField=author&filterValue=John&sortBy=title&sortOrder=DESC`
-  //   );
-  //   expect(response.ok()).toBeTruthy();
+  const response = await context.get(
+    `${baseURL}/api/v2/posts?pageSize=10&page=1&sortBy=title&sortOrder=ASC&tags=${tagToFilter}`
+  );
 
-  //   const body = await response.json();
-  //   expect(body.data.every((item: any) => item.author === "John")).toBe(true);
+  expect(response.ok()).toBeTruthy();
 
-  //   // Verify sorting descending
-  //   for (let i = 1; i < body.data.length; i++) {
-  //     expect(
-  //       new Date(body.data[i - 1].title) >= new Date(body.data[i].title)
-  //     ).toBe(true);
-  //   }
-  // });
+  const body = await response.json();
+
+  // Verify every item's CSV tag string contains the requested tag
+  expect(
+    body.data.every((item: any) => item.tag.includes(tagToFilter))
+  ).toBe(true);
+});
 });
