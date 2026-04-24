@@ -1,7 +1,7 @@
 // tests/protected-page.spec.js
 import { test, expect } from "@playwright/test";
 
-test("user can access protected page", async ({ page }) => {
+test("@smoke user can access protected page", async ({ page }) => {
     const rawBaseURL = process.env.BASE_URL;
 
   if (!rawBaseURL) {

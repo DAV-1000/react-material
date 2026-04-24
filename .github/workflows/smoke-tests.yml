@@ -1,4 +1,4 @@
-name: Manual Playwright Tests
+name: Smoke Tests
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         required: true
         default: 'main'
       base_url:
-        description: 'Base URL for Playwright tests'
+        description: 'Base URL for smoke tests'
         required: true
         default: ''
 
@@ -56,7 +56,7 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: ./frontend
-        run: npx playwright test
+        run: npx playwright test --grep @smoke
 
 
       - name: Report Playwright test summary
