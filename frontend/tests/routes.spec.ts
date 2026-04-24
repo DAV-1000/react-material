@@ -18,7 +18,7 @@ const publicRoutes = [
   // { path: '/foo', title: 'Foo' },
 ];
 
-test.describe("Public Routes", () => {
+test.describe("@smoke Public Routes", () => {
   for (const route of publicRoutes) {
     test(`should load ${route.path} successfully`, async ({
       page,
