@@ -1,0 +1,121 @@
+name: CRUD E2E Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run tests on'
+        required: true
+        default: 'main'
+      base_url:
+        description: 'Base URL for CRUD E2E tests'
+        required: true
+        default: 'http://localhost:4280'
+
+env:
+  BASE_URL: ${{ github.event.inputs.base_url }}
+  AUTH_JWT_BASE64: ${{ secrets.AUTH_STATE }}
+  BRANCH_NAME: ${{ github.head_ref != '' && github.head_ref || github.event.inputs.branch }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verify JWT authentication with SWA
+        run: |
+          echo "Testing authentication against SWA on branch '${BRANCH_NAME}' at URL: ${BASE_URL}"
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Cookie: StaticWebAppsAuthCookie=${AUTH_JWT_BASE64}" \
+            "${BASE_URL}/blog")
+
+          if [ "$response" != "200" ]; then
+            echo "::error::Authentication failed with HTTP $response. The provided AUTH_JWT_BASE64 may be invalid or expired."
+            exit 1
+          fi
+
+          echo "✅ Authentication test succeeded (HTTP 200)."
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: ./frontend
+        run: npx playwright install --with-deps
+
+      - name: Start Cosmos DB emulator
+        run: |
+          docker run -d \
+            --name cosmosdb \
+            -p 8081:8081 \
+            -p 10250-10255:10250-10255 \
+            mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
+
+      - name: Wait for Cosmos DB emulator
+        run: |
+          for i in {1..60}; do
+            status="$(curl -sk -o /dev/null -w "%{http_code}" https://localhost:8081/ || true)"
+            if [ "$status" = "401" ]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          docker logs cosmosdb
+          exit 1
+
+      - name: Download Cosmos emulator certificate
+        run: npm run cosmos:cert
+
+      - name: Build Application
+        run: npm run start:all
+
+      - name: Wait for SWA
+        run: |
+          for i in {1..60}; do
+            if curl -sf http://localhost:4280 > /dev/null; then
+              exit 0
+            fi
+            sleep 5
+          done
+          cat swa.log
+          exit 1
+
+      - name: Run Playwright tests
+        working-directory: ./frontend
+        run: npx playwright test
+
+      - name: Report Playwright test summary
+        if: always()
+        uses: daun/playwright-report-summary@v3
+        with:
+          report-file: ./frontend/playwright-report/test-results.json
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: ./frontend/playwright-report/html
+
+      - name: Add link to HTML report in Checks summary
+        if: always()
+        run: |
+          echo "## [Playwright HTML Report](https://github.com/${GITHUB_REPOSITORY}/suites/${GITHUB_RUN_ID}/artifacts)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload raw test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: ./frontend/playwright-report/test-results.json
