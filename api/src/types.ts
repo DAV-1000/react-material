@@ -4,4 +4,5 @@ export interface ClientPrincipal {
   userId: string;
   userDetails: string;
   userRoles: string[];
+  claims: string[];
 }
