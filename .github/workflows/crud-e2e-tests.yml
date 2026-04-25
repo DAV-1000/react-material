@@ -49,6 +49,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install root dependencies
+        working-directory: ./
+        run: npm ci
+
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm ci
