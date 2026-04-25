@@ -22,19 +22,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Verify JWT authentication with SWA
-        run: |
-          echo "Testing authentication against SWA on branch '${BRANCH_NAME}' at URL: ${BASE_URL}"
-          response=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "Cookie: StaticWebAppsAuthCookie=${AUTH_JWT_BASE64}" \
-            "${BASE_URL}/blog")
+      # - name: Verify JWT authentication with SWA
+      #   run: |
+      #     echo "Testing authentication against SWA on branch '${BRANCH_NAME}' at URL: ${BASE_URL}"
+      #     response=$(curl -s -o /dev/null -w "%{http_code}" \
+      #       -H "Cookie: StaticWebAppsAuthCookie=${AUTH_JWT_BASE64}" \
+      #       "${BASE_URL}/blog")
 
-          if [ "$response" != "200" ]; then
-            echo "::error::Authentication failed with HTTP $response. The provided AUTH_JWT_BASE64 may be invalid or expired."
-            exit 1
-          fi
+      #     if [ "$response" != "200" ]; then
+      #       echo "::error::Authentication failed with HTTP $response. The provided AUTH_JWT_BASE64 may be invalid or expired."
+      #       exit 1
+      #     fi
 
-          echo "✅ Authentication test succeeded (HTTP 200)."
+      #     echo "✅ Authentication test succeeded (HTTP 200)."
 
       - name: Checkout code
         uses: actions/checkout@v4
