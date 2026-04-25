@@ -49,8 +49,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         working-directory: ./frontend
+        run: npm ci
+
+      - name: Install api dependencies
+        working-directory: ./api
         run: npm ci
 
       # - name: Install Playwright browsers
