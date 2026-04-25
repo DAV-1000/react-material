@@ -40,6 +40,7 @@ jobs:
 
       #     echo "✅ Authentication test succeeded (HTTP 200)."
 
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -66,6 +67,15 @@ jobs:
         working-directory: ./frontend
         run: npx playwright install chromium --with-deps
 
+      - name: Start Azurite
+        run: |
+          docker run -d \
+            --name azurite \
+            -p 10000:10000 \
+            -p 10001:10001 \
+            -p 10002:10002 \
+            mcr.microsoft.com/azure-storage/azurite
+
       - name: Start Cosmos DB emulator
         run: |
           docker run -d \
@@ -91,6 +101,7 @@ jobs:
 
       - name: Build Application
         run: npm run start
+        
 
       - name: Wait for SWA
         run: |
