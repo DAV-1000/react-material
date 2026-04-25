@@ -61,9 +61,9 @@ jobs:
         working-directory: ./api
         run: npm ci
 
-      # - name: Install Playwright browsers
-      #   working-directory: ./frontend
-      #   run: npx playwright install --with-deps
+      - name: Install Playwright browsers
+        working-directory: ./frontend
+        run: npx playwright install chromium --with-deps
 
       - name: Start Cosmos DB emulator
         run: |
@@ -89,7 +89,7 @@ jobs:
         run: npm run cosmos:cert
 
       - name: Build Application
-        run: npm run start:all
+        run: npm run start
 
       - name: Wait for SWA
         run: |
@@ -104,7 +104,7 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: ./frontend
-        run: npx playwright test
+        run: npx playwright test --project=chromium
 
       # - name: Report Playwright test summary
       #   if: always()
