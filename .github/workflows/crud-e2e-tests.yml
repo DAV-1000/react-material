@@ -100,8 +100,9 @@ jobs:
         run: npm run cosmos:cert
 
       - name: Build Application
-        run: npm run start
-        
+        run: |
+          nohup npm run start > swa.log 2>&1 &
+          echo $! > swa.pid
 
       - name: Wait for SWA
         run: |
@@ -117,6 +118,11 @@ jobs:
       - name: Run Playwright tests
         working-directory: ./frontend
         run: npx playwright test --project=chromium
+
+      - name: Stop Application
+        if: always()
+        run: |
+          kill $(cat swa.pid) || true
 
       # - name: Report Playwright test summary
       #   if: always()
