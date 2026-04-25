@@ -88,18 +88,6 @@ jobs:
       - name: Download Cosmos emulator certificate
         run: npm run cosmos:cert
 
-      - name: Set worker runtime
-  run: 
-      |
-         cat > api/local.settings.json <<EOF
-         {
-           "IsEncrypted": false,
-           "Values": {
-             "FUNCTIONS_WORKER_RUNTIME": "node"
-           }
-         }
-         EOF
-
       - name: Build Application
         run: npm run start
 
