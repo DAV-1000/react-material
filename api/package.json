@@ -20,7 +20,7 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@types/node": "18.x",
+    "@types/node": "^22.19.17",
     "@types/uuid": "^10.0.0",
     "azure-functions-core-tools": "^4.x",
     "rimraf": "^6.0.1",
