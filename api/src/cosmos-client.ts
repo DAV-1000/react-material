@@ -24,7 +24,7 @@ let cosmosClient: CosmosClient;
 // Local emulator
 if (isLocalCosmos) {
   const ca = fs.readFileSync(
-    "./certs/cosmos-emulator.pem",
+    "../.certs/cosmos-emulator.pem",
     "utf8",
   );
 
