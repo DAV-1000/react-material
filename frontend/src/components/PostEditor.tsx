@@ -179,8 +179,8 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
                 container
                 spacing={2}
                 key={index}
-                alignItems="center"
-                sx={{ mb: 2 }}
+                
+                sx={{ alignItems:"center", mb: 2 }}
               >
                 <Grid>
                   <Avatar src={author.avatar} />
@@ -222,7 +222,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
           </Grid>
 
           <Grid size={{ xs: 12 }}>
-            <Box textAlign="right">
+            <Box sx={{ textAlign:"right" }}>
               <Button
                 variant="contained"
                 color="primary"

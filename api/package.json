@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/functions/*.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build": "npm run clean && tsc",
     "build:azure": "tsc",

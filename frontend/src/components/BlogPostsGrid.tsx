@@ -88,7 +88,11 @@ export const BlogPostsGrid: React.FC<Props> = ({
       field: "id",
       width: 114,
       renderCell: (params: GridRenderCellParams<Post, string>) => (
-        <Stack direction="row" spacing={1} alignItems="center" height="100%">
+        <Stack direction="row" spacing={1}
+          sx={{
+            alignItems: 'center',
+            height: '100%',
+          }}>
           <EditPostButton id={params.value} />
           <DeletePostButton id={params.value} />
         </Stack>
@@ -120,7 +124,10 @@ export const BlogPostsGrid: React.FC<Props> = ({
           .filter(Boolean);
 
         return (
-          <Stack direction="row" spacing={1} flexWrap="wrap">
+          <Stack direction="row" spacing={1} 
+            sx={{
+              flexWrap:"wrap"
+            }}>
             {tagList.map((t) => (
               <Chip key={t} label={t} size="small" />
             ))}
@@ -171,7 +178,11 @@ export const BlogPostsGrid: React.FC<Props> = ({
   return (
     <Container maxWidth="lg" sx={{ py: 2 }}>
       {/* Controls */}
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={2}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        sx={{ mb: 2 }}
+      >
         <FormControl size="small" sx={{ minWidth: 220 }}>
           <InputLabel>Filter by Tag</InputLabel>
           <Select
