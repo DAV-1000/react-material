@@ -6,7 +6,6 @@
     "start": "swa start",
     "start:all": "concurrently \"npm run start --prefix api\" \"npm run dev --prefix frontend\"",
     "build:all": "concurrently \"npm run build --prefix api\" \"npm run build --prefix frontend\"",
-    "build:azure": "concurrently \"npm run build:azure --prefix api\" \"npm run build:azure --prefix frontend\"",
     "test:all": "npm run test --prefix frontend",
     "cosmos:getcert": "node ./scripts/get-cosmos-cert.mjs"
   },
