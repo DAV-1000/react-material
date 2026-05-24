@@ -1,7 +1,7 @@
 import React from "react";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { Link as RouterLink } from "react-router-dom";
 
 interface EditButtonProps {
@@ -9,11 +9,11 @@ interface EditButtonProps {
 }
 
 const EditButton: React.FC<EditButtonProps> = ({ id }) => {
+  const { user, userLoading } = useAuth();
+  
   if (!id) {
     return null;
   }
-
-  const { user, userLoading } = useAuth();
 
   if (userLoading) {
     // User details being retrieved → show nothing

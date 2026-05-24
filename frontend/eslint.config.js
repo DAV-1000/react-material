@@ -7,27 +7,48 @@ import { globalIgnores } from 'eslint/config'
 import reactDom from 'eslint-plugin-react-dom'
 
 export default tseslint.config([
-  globalIgnores(['dist','src/templates']),
+  globalIgnores(['dist', 'src/templates','tests','playwright.config.ts']),
+
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+
   {
     files: ['**/*.{ts,tsx}'],
+
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+      'react-dom': reactDom,
+    },
+
     rules: {
-      '@typescript-eslint/no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }],
-      '@typescript-eslint/no-empty-object-type': 'error', // apply globally
+      ...reactHooks.configs.recommended.rules,
+      ...reactRefresh.configs.vite.rules,
+      ...reactDom.configs.recommended.rules,
+
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: true,
+        },
+      ],
+
+      '@typescript-eslint/no-empty-object-type': 'error',
       'import/prefer-default-export': 'off',
     },
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
+
     languageOptions: {
-            parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json','./tsconfig.test.json'],
+      parserOptions: {
+        project: [
+          './tsconfig.node.json',
+          './tsconfig.app.json',
+          './tsconfig.test.json',
+        ],
         tsconfigRootDir: import.meta.dirname,
       },
+
       ecmaVersion: 2020,
       globals: globals.browser,
     },

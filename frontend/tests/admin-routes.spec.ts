@@ -1,4 +1,3 @@
-// tests/protected-page.spec.js
 import { test, expect } from "@playwright/test";
 
 test("@smoke user can access protected page", async ({ page }) => {

@@ -23,18 +23,27 @@ export interface PostEditorProps {
 type ValidationErrors = Partial<Record<string, string>>;
 
 const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
-  if (!post) {
+
+  const [entity, setEntity] = useState<PostCommand | null>(post ?? null);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [tagsInput, setTagsInput] = useState(post?.tags?.join(", ") || "");
+
+  if (!post || !entity) {
     return <Typography variant="h6">No post data available.</Typography>;
   }
-
-  const [entity, setEntity] = useState<PostCommand>(post);
-  const [errors, setErrors] = useState<ValidationErrors>({});
-
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setEntity((prev) => ({ ...prev, [name]: value }));
+    setEntity((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
     setErrors((prev) => ({ ...prev, [name]: "" })); // clear error when typing
   };
 
@@ -61,19 +70,22 @@ const PostEditor: React.FC<PostEditorProps> = ({ post, onSave, disabled }) => {
     setEntity({ ...entity, authors: newAuthors });
   };
 
-  const [tagsInput, setTagsInput] = useState(post.tags?.join(", ") || "");
-
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
+
     setTagsInput(value);
 
-    setEntity((prev) => ({
-      ...prev,
-      tags: value
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean),
-    }));
+    setEntity((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        tags: value
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
+      };
+    });
   };
 
   const handleSubmit = () => {

@@ -5,7 +5,7 @@ import App from "./App.tsx";
 import { StyledEngineProvider } from '@mui/styled-engine'; 
 import { PostCommandServiceProvider } from "./services/PostCommandServiceContext.tsx";
 import { PostQueryServiceProvider } from "./services/PostQueryServiceContext.tsx";
-import { AuthProvider } from "./context/AuthContext.tsx";
+import { AuthProvider } from "./providers/AuthProvider.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>

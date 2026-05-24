@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { Link as RouterLink } from "react-router-dom";
 import Button from "@mui/material/Button";
 
@@ -20,8 +20,6 @@ const BlogButton: React.FC = () => {
   if (!user.userRoles.includes("editor")) {
     return null;
   }
-
-  const toRoute = `../blog`;
 
   return (
     <Button component={RouterLink} to="/blog" variant="text" size="small">
