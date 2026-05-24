@@ -12,9 +12,6 @@ import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PrintIcon from "@mui/icons-material/Print";
-import AddIcon from "@mui/icons-material/Add";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import { useGridApiContext } from "@mui/x-data-grid";
 import Badge from "@mui/material/Badge";
 
 import { GridToolbarProps } from '@mui/x-data-grid';
@@ -25,13 +22,7 @@ export interface BlogPostsGridToolbarProps extends GridToolbarProps {
 }
 
 const BlogPostsGridToolbar: React.FC = ( ) => {
-  const apiRef = useGridApiContext();
 
-  const handleRefresh = () => {
-    // This refreshes the grid rows
-    apiRef.current?.updateRows([]);
-    // Or trigger a full reload depending on your data fetching strategy
-  };
   return (
     <Toolbar>
      <AddPostButton />

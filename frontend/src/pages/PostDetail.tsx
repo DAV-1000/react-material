@@ -1,5 +1,4 @@
-// eslint-disable-next-line react-x/no-use-context
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -11,61 +10,78 @@ import PostLayout from "../components/PostLayout";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
-  // eslint-disable-next-line react-x/no-use-context
+
   const blogPostService = useContext(PostQueryServiceContext);
-  const [post, setPost] = useState<PostQuery | null>(null);
-  const [content, setContent] = useState<string>("");
-  const [loadingContent, setLoadingContent] = useState<boolean>(false);
-  const [loading, setLoading] = useState(true);
+
+  // undefined = loading/not loaded yet
+  // null = loaded but not found
+  const [post, setPost] = useState<PostQuery | null | undefined>(undefined);
+
+  const [content, setContent] = useState<string | null | undefined>(undefined);
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) {
-      setError("No post id provided.");
-      setLoading(false);
-      return;
-    }
+    if (!id) return;
 
-    setLoading(true);
+    let cancelled = false;
 
-    blogPostService!
-      .getById(id)
+    blogPostService
+      ?.getById(id)
       .then((data) => {
+        if (cancelled) return;
+
         setPost(data);
-        setLoading(false);
+
         if (data === null) {
           setError("Post not found.");
         }
       })
       .catch(() => {
+        if (cancelled) return;
+
         setError("Error retrieving post.");
-        setLoading(false);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [id, blogPostService]);
 
   useEffect(() => {
-    if (!id) {
-      setError("No post id provided.");
-      setLoadingContent(false);
-      return;
-    }
+    if (!id) return;
 
-    setLoadingContent(true);
+    let cancelled = false;
 
-    blogPostService!
-      .getContent(id ?? null)
-      .then((content) => {
-        setContent(content);
-        setLoading(false);
-        if (content === null) {
+    blogPostService
+      ?.getContent(id)
+      .then((data) => {
+        if (cancelled) return;
+
+        setContent(data);
+
+        if (data === null) {
           setError("Post content not found.");
         }
       })
       .catch(() => {
+        if (cancelled) return;
+
         setError("Error retrieving post content.");
-        setLoading(false);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [id, blogPostService]);
+
+  if (!id) {
+    return <Typography>No post id provided.</Typography>;
+  }
+
+  const loading =
+    error === null &&
+    (post === undefined || content === undefined);
 
   if (loading) {
     return <Typography>Loading post...</Typography>;
@@ -75,15 +91,21 @@ export default function PostDetail() {
     return (
       <Box>
         <Typography color="error">{error}</Typography>
-        <Button component={RouterLink} to="/" variant="outlined" sx={{ mt: 2 }}>
+
+        <Button
+          component={RouterLink}
+          to="/"
+          variant="outlined"
+          sx={{ mt: 2 }}
+        >
           Back home
         </Button>
       </Box>
     );
   }
 
-  if (!post) {
-    return null; // Or a fallback UI
+  if (!post || !content) {
+    return null;
   }
 
   return (

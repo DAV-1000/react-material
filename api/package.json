@@ -4,9 +4,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/functions/*.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build": "npm run clean && tsc",
-    "build:azure": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf dist",
     "prestart": "npm run build",
@@ -20,10 +22,10 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@types/node": "18.x",
+    "@types/node": "22.x",
     "@types/uuid": "^10.0.0",
     "azure-functions-core-tools": "^4.x",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "rimraf": "^6.1.3"
   }
 }

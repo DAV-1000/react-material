@@ -1,6 +1,5 @@
-
-// eslint-disable-next-line react-x/no-use-context
 import { createContext, useContext } from 'react';
+
 import { postCommandService, PostCommandService } from './PostCommandService';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -18,5 +17,5 @@ export const PostCommandServiceProvider = ({ children }: PostCommandServiceProvi
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components, react-x/no-use-context
+// eslint-disable-next-line react-refresh/only-export-components
 export const usePostCommandService = () => useContext(PostCommandServiceContext);

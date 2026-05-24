@@ -1,5 +1,4 @@
 
-// eslint-disable-next-line react-x/no-use-context
 import { createContext, useContext } from 'react';
 import { postQueryService, PostQueryService } from './PostQueryService';
 
@@ -18,5 +17,5 @@ export const PostQueryServiceProvider = ({ children }: PostQueryServiceProviderP
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components, react-x/no-use-context
+// eslint-disable-next-line react-refresh/only-export-components
 export const usePostQueryService = () => useContext(PostQueryServiceContext);

@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { PostCommandServiceContext } from "../services/PostCommandServiceContext";
 
 interface DeleteButtonProps {

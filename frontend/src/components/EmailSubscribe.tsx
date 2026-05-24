@@ -31,9 +31,7 @@ const EmailSubscribe: React.FC<EmailSubscribeProps> = ({ onSubscribe }) => {
   return (
     <Stack direction="row" spacing={1} useFlexGap>
       <Box
-        display="flex"
-        alignItems="flex-start"
-        gap={1}
+        sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}
       >
         <TextField
           id="email-newsletter"

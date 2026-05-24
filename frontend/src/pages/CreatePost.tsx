@@ -3,37 +3,20 @@ import Typography from "@mui/material/Typography";
 import PostEditor from "../components/PostEditor";
 import { PostCommandServiceContext } from "../services/PostCommandServiceContext";
 import { useContext, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import Button from "@mui/material/Button";
 import { useSnackbar } from "../hooks/useSnackbar";
 import { newPost, PostCommand } from "../schemas/post.schema";
 
 import { useNavigate } from "react-router-dom";
 
 export default function EditPost() {
-  // eslint-disable-next-line react-x/no-use-context
+
   const postCommandService = useContext(PostCommandServiceContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  if (!postCommandService) {
-    throw new Error("Post Command Service Context is not provided");
-  }
   const { showSnackbar, SnackbarComponent } = useSnackbar();
 
-  const [error, setError] = useState<string | null>(null);
   const post: PostCommand = newPost();
-
-  if (error) {
-    return (
-      <Box>
-        <Typography color="error">{error}</Typography>
-        <Button component={RouterLink} to="/" variant="outlined" sx={{ mt: 2 }}>
-          Back home
-        </Button>
-      </Box>
-    );
-  }
 
   if (!post) {
     return null; // Or a fallback UI
@@ -42,12 +25,15 @@ export default function EditPost() {
   const handleSave = async (value: PostCommand) => {
     setLoading(true);
     try {
-      const createdPost = await postCommandService.create(value);
+      const createdPost = await postCommandService!.create(value);
       showSnackbar("Post created successfully!", "success", () => {
         navigate(`/${createdPost.id}/edit`);
       });
-    } catch (err: any) {
-      showSnackbar(`Failed to save post: ${err.message}`, "error");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Unknown error";
+
+      showSnackbar(`Failed to save post: ${message}`, "error");
     } finally {
       setLoading(false);
     }

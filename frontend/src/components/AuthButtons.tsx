@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@mui/material/Button"; // or your UI lib
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 const AuthButtons: React.FC = () => {
   const { user, userLoading } = useAuth();

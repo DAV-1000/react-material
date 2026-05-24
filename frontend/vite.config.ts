@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, type ProxyOptions } from "vite";
 import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
@@ -11,7 +11,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         logLevel: "debug",
-      } as any,
+      } as ProxyOptions,
     },
   },
 });

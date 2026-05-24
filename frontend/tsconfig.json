@@ -1,4 +1,5 @@
 {
+    "warnOnUnsupportedTypeScriptVersion": true,
     "compilerOptions": {
     "esModuleInterop": true,
     "types": ["node"],

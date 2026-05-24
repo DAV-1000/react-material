@@ -11,6 +11,15 @@ node_modules
 dist
 dist-ssr
 
+# Azurite local storage
+AzuriteConfig
+__azurite_db_blob__.json
+__azurite_db_blob_extent__.json
+__azurite_db_queue__.json
+__azurite_db_queue_extent__.json
+__azurite_db_table__.json
+__blobstorage__/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
